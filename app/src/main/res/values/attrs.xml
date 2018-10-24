@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+    <attr name="accent_color" format="color" />
+    <attr name="icon_color" format="color" />
+    <attr name="secondary_bg_color" format="color" />
+    <attr name="popup_text_color" format="color" />
+    <attr name="theme_icon" format="color" />
+
+    <declare-styleable name="RoundedFastScrollRecyclerView">
+        <attr name="roundedFastScrollThumbColor" format="reference|color" />
+        <attr name="roundedFastScrollThumbInactiveColor" format="reference|color" />
+        <attr name="roundedFastScrollTrackColor" format="reference|color" />
+        <attr name="roundedFastScrollPopupBgColor" format="reference|color" />
+        <attr name="roundedFastScrollPopupTextColor" format="reference|color" />
+    </declare-styleable>
+
+</resources>

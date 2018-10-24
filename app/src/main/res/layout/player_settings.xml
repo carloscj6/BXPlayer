@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/secondary_bg_color"
+    android:orientation="vertical"
+    android:visibility="invisible">
+
+    <!-- OPTIONS -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/app_name"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:onClick="openGitPage"
+            android:padding="12dp"
+            android:src="@drawable/github" />
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/app_name"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:onClick="switchTheme"
+            android:padding="12dp"
+            android:src="?attr/theme_icon" />
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/app_name"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:onClick="closeSettings"
+            android:padding="12dp"
+            android:src="@drawable/close" />
+    </LinearLayout>
+
+    <!-- COLORS OPTIONS -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/colors_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        tools:context="com.iven.musicplayergo.MainActivity" />
+</LinearLayout>
