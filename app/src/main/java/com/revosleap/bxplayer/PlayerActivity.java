@@ -1,12 +1,17 @@
 package com.revosleap.bxplayer;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
-import com.revosleap.bxplayer.AppUtils.Utils.AudioPlayer;
+
 import com.revosleap.bxplayer.AppUtils.Utils.AudioPlayerService;
 import com.revosleap.bxplayer.AppUtils.Utils.GaussianBlur;
 import com.revosleap.bxplayer.Fragments.InfoFragment;
@@ -69,7 +74,7 @@ public class PlayerActivity extends AppCompatActivity {
 
 //        title.setSelected(true);
 //        artist.setSelected(true);
-
+        checkPermissin();
         control();
         loadMainFragment();
 
@@ -85,17 +90,7 @@ public class PlayerActivity extends AppCompatActivity {
         layout.setBackgroundColor(color);
 
 
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (new AudioPlayer().isPLaying()) {
-                    new AudioPlayer().pause();
-                } else {
-                    new AudioPlayer().start();
-                }
 
-            }
-        });
 
 
     }
@@ -127,13 +122,6 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    private void playIcon() {
-        if (new AudioPlayer().isPLaying()) {
-            play.setBackground(getResources().getDrawable(R.drawable.pause));
-        } else {
-            play.setBackground(getResources().getDrawable(R.drawable.play));
-        }
-    }
 
     private void control() {
         layout.setOnClickListener(new View.OnClickListener() {
@@ -215,6 +203,15 @@ public class PlayerActivity extends AppCompatActivity {
 //            else {
 //               super.onBackPressed();
 //            }
+        }
+    }
+    private void checkPermissin(){
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+            if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                    !=PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+            }
         }
     }
 }

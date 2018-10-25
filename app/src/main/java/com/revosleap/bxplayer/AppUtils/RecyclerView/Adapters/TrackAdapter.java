@@ -15,8 +15,7 @@ import android.widget.Toast;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 import com.revosleap.bxplayer.AppUtils.Models.Song;
-import com.revosleap.bxplayer.AppUtils.RecyclerView.ViewHolder.TrackViewHolder;
-import com.revosleap.bxplayer.AppUtils.Utils.AudioPlayer;
+
 import com.revosleap.bxplayer.R;
 
 import java.util.List;
@@ -48,18 +47,8 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.Holder> {
         String artist= model.getArtist();
         final String path= model.getPath();
 
-//        holder.title.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new AudioPlayer().play(path);
-//                SharedPreferences preferences= PreferenceManager.getDefaultSharedPreferences(context);
-//                SharedPreferences.Editor editor= preferences.edit();
-//                editor.putString("CurrentPath",path);
-//                editor.apply();
-//            }
-//        });
-        holder.artist.setText(artist);
-        holder.title.setText(title);
+        holder.artist.setText(title);
+        holder.title.setText(artist);
 
     }
 

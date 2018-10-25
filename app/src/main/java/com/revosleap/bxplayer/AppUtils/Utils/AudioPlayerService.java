@@ -448,15 +448,15 @@ MediaPlayer.OnInfoListener,AudioManager.OnAudioFocusChangeListener{
         int notificationAction= android.R.drawable.ic_media_pause;
         PendingIntent playPuaseAction= null;
         if (playbackStatus==PlaybackStatus.PLAYING){
-            notificationAction = android.R.drawable.ic_media_pause;
+            notificationAction = R.drawable.pause;
             playPuaseAction= playbackAction(0);
         }
         else if (playbackStatus==PlaybackStatus.PAUSED){
-            notificationAction = android.R.drawable.ic_media_play;
+            notificationAction = R.drawable.play_icon;
             //create the play action
             playPuaseAction = playbackAction(0);
         }
-        Bitmap largeIcon= BitmapFactory.decodeResource(getResources(),R.drawable.cover3);
+        Bitmap largeIcon= BitmapFactory.decodeResource(getResources(),R.drawable.cover2);
         NotificationCompat.Builder notificationBuilder= new NotificationCompat.Builder(this)
                 .setShowWhen(false)
                 .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
@@ -465,15 +465,15 @@ MediaPlayer.OnInfoListener,AudioManager.OnAudioFocusChangeListener{
                 .setColor(getResources().getColor(R.color.colorAccentLight))
                 .setLargeIcon(largeIcon)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setSmallIcon(android.R.drawable.stat_sys_headset)
+                .setSmallIcon(R.drawable.ic_if_speaker)
                 .setContentText(activeAudio.getArtist())
                 .setContentTitle(activeAudio.getAlbum())
                 .setContentInfo(activeAudio.getTitle())
                 .setOngoing(true)
                 // Add playback actions
-                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
+                .addAction(R.drawable.previous, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", playPuaseAction)
-                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2));
+                .addAction(R.drawable.next, "next", playbackAction(2));
         ((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE))
                 .notify(NOTIFICATION_ID,notificationBuilder.build());
 
