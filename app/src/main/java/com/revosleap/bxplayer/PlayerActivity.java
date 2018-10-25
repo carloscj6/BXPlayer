@@ -28,7 +28,6 @@ import android.widget.TextView;
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 
 import com.revosleap.bxplayer.AppUtils.Utils.AudioPlayerService;
-import com.revosleap.bxplayer.AppUtils.Utils.GaussianBlur;
 import com.revosleap.bxplayer.Fragments.InfoFragment;
 import com.revosleap.bxplayer.Fragments.MainFragment;
 
@@ -86,8 +85,7 @@ public class PlayerActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cover2);
 
 
-        int color = GaussianBlur.lightColor(bitmap);
-        layout.setBackgroundColor(color);
+
 
 
 

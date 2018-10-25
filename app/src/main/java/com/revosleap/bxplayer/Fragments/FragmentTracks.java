@@ -4,13 +4,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,15 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
-import com.revosleap.bxplayer.AppUtils.Models.Song;
-import com.revosleap.bxplayer.AppUtils.Player.PlayerAdapter;
-import com.revosleap.bxplayer.AppUtils.Player.Utils;
-import com.revosleap.bxplayer.AppUtils.RecyclerView.Adapters.SongsAdapter;
 import com.revosleap.bxplayer.AppUtils.RecyclerView.Adapters.TrackAdapter;
 import com.revosleap.bxplayer.AppUtils.RecyclerView.Listeners.CustomTouchListener;
 import com.revosleap.bxplayer.AppUtils.Utils.AudioPlayerService;
 import com.revosleap.bxplayer.AppUtils.Utils.GetAudio;
-import com.revosleap.bxplayer.AppUtils.Utils.SongProvider;
 import com.revosleap.bxplayer.AppUtils.Utils.StorageUtil;
 import com.revosleap.bxplayer.AppUtils.Utils.onItemClickListener;
 import com.revosleap.bxplayer.R;
@@ -42,9 +35,8 @@ public class FragmentTracks extends Fragment  {
     boolean serviceBound = false;
     List<AudioModel>list;
     public static final String Broadcast_PLAY_NEW_AUDIO = "com.revosleap.bxplayer.PlayNewAudio";
-    private List<Song> mSelectedArtistSongs;
+
     private TrackAdapter adapter;
-    private PlayerAdapter mPlayerAdapter;
 
 
 
@@ -56,7 +48,7 @@ public class FragmentTracks extends Fragment  {
 
 
         View view= inflater.inflate(R.layout.fragment_tracks, container, false);
-        mSelectedArtistSongs= SongProvider.getAllDeviceSongs();
+
 
         list= new GetAudio().geAllAudio(getActivity());
         adapter= new TrackAdapter(list,getActivity());

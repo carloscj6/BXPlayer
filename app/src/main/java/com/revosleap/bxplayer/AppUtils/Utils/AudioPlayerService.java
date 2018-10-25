@@ -29,7 +29,6 @@ import com.revosleap.bxplayer.PlayerActivity;
 import com.revosleap.bxplayer.R;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AudioPlayerService extends Service implements MediaPlayer.OnCompletionListener,

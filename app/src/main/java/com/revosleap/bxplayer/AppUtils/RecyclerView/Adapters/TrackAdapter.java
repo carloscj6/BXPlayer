@@ -1,9 +1,6 @@
 package com.revosleap.bxplayer.AppUtils.RecyclerView.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
-import com.revosleap.bxplayer.AppUtils.Models.Song;
 
 import com.revosleap.bxplayer.R;
 
@@ -61,9 +56,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.Holder> {
     public int getItemCount() {
         return tracklist.size();
     }
-    public interface SongSelectedListener {
-        void onSongSelected(@NonNull final Song song, @NonNull final List<Song> songs);
-    }
+
     public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView trackImage;
         public TextView title,artist;

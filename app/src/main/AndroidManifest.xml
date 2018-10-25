@@ -27,7 +27,6 @@
         </activity>
 
         <service android:name=".AppUtils.Utils.AudioPlayerService" />
-        <service android:name=".AppUtils.Player.MusicService" />
         <service android:name=".BxUtils.BxAudioService" />
 
         <meta-data

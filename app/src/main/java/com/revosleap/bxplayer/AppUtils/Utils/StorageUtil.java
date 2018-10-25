@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StorageUtil {
@@ -54,6 +53,6 @@ public class StorageUtil {
         preferences = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 }

@@ -13,13 +13,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
-import com.revosleap.bxplayer.AppUtils.Player.MusicNotificationManager;
-import com.revosleap.bxplayer.AppUtils.Player.MusicService;
+
 import com.revosleap.bxplayer.AppUtils.Player.PlaybackInfoListener;
-import com.revosleap.bxplayer.AppUtils.Player.PlayerAdapter;
 import com.revosleap.bxplayer.AppUtils.RecyclerView.Adapters.ArtistAdapter;
 import com.revosleap.bxplayer.AppUtils.Utils.GetAudio;
 import com.revosleap.bxplayer.R;
@@ -34,31 +31,7 @@ public class FragmentArtists extends Fragment {
         // Required empty public constructor
     }
     RecyclerView recyclerView;
-    private MusicService mMusicService;
-    private PlayerAdapter mPlayerAdapter;
-    private MusicNotificationManager mMusicNotificationManager;
-    private PlaybackListener mPlaybackListener;
-    private final ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
 
-            mMusicService = ((MusicService.LocalBinder) iBinder).getInstance();
-            mPlayerAdapter = mMusicService.getMediaPlayerHolder();
-            mMusicNotificationManager = mMusicService.getMusicNotificationManager();
-
-
-            if (mPlaybackListener == null) {
-                mPlaybackListener = new PlaybackListener();
-                mPlayerAdapter.setPlaybackInfoListener(mPlaybackListener);
-            }
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mMusicService = null;
-        }
-    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -91,10 +64,7 @@ public class FragmentArtists extends Fragment {
         @Override
         public void onStateChanged(@State int state) {
 
-            //updatePlayingStatus();
-            if (mPlayerAdapter.getState() != State.RESUMED && mPlayerAdapter.getState() != State.PAUSED) {
-             //   updatePlayingInfo(false, true);
-            }
+
         }
 
 //        @Override

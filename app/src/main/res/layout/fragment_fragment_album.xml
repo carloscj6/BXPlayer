@@ -2,36 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:scroller="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sliding_panel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.revosleap.bxplayer.Fragments.FragmentAlbum">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
 
-        <!-- ARTISTS LIST -->
-       <include layout="@layout/music_list_recycler"
-           />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <!-- NOW PLAYING INFO -->
-            <include layout="@layout/player_now_playing" />
-
-            <!-- ARTIST'S DISCOGRAPHY -->
-            <include layout="@layout/artist_discography" />
-
-        </LinearLayout>
-
-    </FrameLayout>
-
-    <!-- CONTROLS PANEL -->
 
 </LinearLayout>

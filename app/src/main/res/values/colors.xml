@@ -4,9 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#ff4081</color>
     <color name="colorAccentLight">#f8bbd0</color>
-    <color name="colorWhite">#FFFFFF</color>
 
-    <color name="black_overlay">#66000000</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="rounded_thumb_default_color">#79000000</color>
