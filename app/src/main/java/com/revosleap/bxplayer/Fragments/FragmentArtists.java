@@ -1,11 +1,8 @@
 package com.revosleap.bxplayer.Fragments;
 
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 
-import com.revosleap.bxplayer.AppUtils.Player.PlaybackInfoListener;
 import com.revosleap.bxplayer.AppUtils.RecyclerView.Adapters.ArtistAdapter;
 import com.revosleap.bxplayer.AppUtils.Utils.GetAudio;
 import com.revosleap.bxplayer.R;
@@ -52,26 +48,5 @@ public class FragmentArtists extends Fragment {
 
 
     }
-    class PlaybackListener extends PlaybackInfoListener {
 
-        @Override
-        public void onPositionChanged(int position) {
-//            if (!mUserIsSeeking) {
-//                mSeekBarAudio.setProgress(position);
-//            }
-        }
-
-        @Override
-        public void onStateChanged(@State int state) {
-
-
-        }
-
-//        @Override
-//        public void onPlaybackCompleted() {
-//
-//            updateResetStatus
-//                    (true);
-//        }
-    }
 }

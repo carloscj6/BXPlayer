@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 import com.revosleap.bxplayer.AppUtils.RecyclerView.Adapters.TrackAdapter;
 import com.revosleap.bxplayer.AppUtils.RecyclerView.Listeners.CustomTouchListener;
-import com.revosleap.bxplayer.AppUtils.Utils.AudioPlayerService;
+import com.revosleap.bxplayer.AppUtils.Player.AudioPlayerService;
 import com.revosleap.bxplayer.AppUtils.Utils.GetAudio;
 import com.revosleap.bxplayer.AppUtils.Utils.StorageUtil;
 import com.revosleap.bxplayer.AppUtils.Utils.onItemClickListener;

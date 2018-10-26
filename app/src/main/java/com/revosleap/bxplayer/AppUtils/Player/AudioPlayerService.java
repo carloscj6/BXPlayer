@@ -1,4 +1,4 @@
-package com.revosleap.bxplayer.AppUtils.Utils;
+package com.revosleap.bxplayer.AppUtils.Player;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -25,6 +25,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
+import com.revosleap.bxplayer.AppUtils.Utils.PlaybackStatus;
+import com.revosleap.bxplayer.AppUtils.Utils.StorageUtil;
 import com.revosleap.bxplayer.PlayerActivity;
 import com.revosleap.bxplayer.R;
 
@@ -96,7 +98,7 @@ MediaPlayer.OnInfoListener,AudioManager.OnAudioFocusChangeListener{
         }
 
         //Request audio focus
-        if (requestAudioFocus() == false) {
+        if (!requestAudioFocus()) {
             //Could not gain focus
             stopSelf();
         }

@@ -1,19 +1,16 @@
 package com.revosleap.bxplayer;
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,11 +22,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.revosleap.bxplayer.AppUtils.Adapters.TabAdapter;
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 
-import com.revosleap.bxplayer.AppUtils.Utils.AudioPlayerService;
+import com.revosleap.bxplayer.AppUtils.Player.AudioPlayerService;
 import com.revosleap.bxplayer.Fragments.InfoFragment;
-import com.revosleap.bxplayer.Fragments.MainFragment;
 
 import java.util.ArrayList;
 
@@ -75,7 +72,7 @@ public class PlayerActivity extends AppCompatActivity {
 //        artist.setSelected(true);
         checkPermissin();
         control();
-        loadMainFragment();
+       tabs();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -93,31 +90,20 @@ public class PlayerActivity extends AppCompatActivity {
 
     }
 
-
-    private void mediaInfo() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(PlayerActivity.this);
-        String path = preferences.getString("CurrentPath", "");
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(path);
-        try {
-            art = retriever.getEmbeddedPicture();
-            Bitmap image = BitmapFactory.decodeByteArray(art, 0, art.length);
-            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), image);
-            cover.setImageDrawable(drawable);
-            title.setText(retriever.extractMetadata(
-                    MediaMetadataRetriever.METADATA_KEY_TITLE
-            ));
-            artist.setText(retriever.extractMetadata(
-                    MediaMetadataRetriever.METADATA_KEY_ARTIST
-            ));
-        } catch (Exception e) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cover1);
-            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-            drawable.setCircular(true);
-            cover.setImageDrawable(drawable);
-            title.setText("Unknown Song Name");
-            artist.setText("Unknown Artist");
-        }
+    private void tabs(){
+        ViewPager mViewPager = findViewById(R.id.containerMain);
+        TabLayout tabLayout = findViewById(R.id.tabsMain);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addTab(tabLayout.newTab().setText("Favorites"));
+        tabLayout.addTab(tabLayout.newTab().setText("Playlist"));
+        tabLayout.addTab(tabLayout.newTab().setText("Tracks"));
+        tabLayout.addTab(tabLayout.newTab().setText("Albums"));
+        tabLayout.addTab(tabLayout.newTab().setText("Artists"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        TabAdapter adapter=new TabAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+        mViewPager.setAdapter(adapter);
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        mViewPager.setCurrentItem(2,true);
     }
 
 
@@ -133,9 +119,7 @@ public class PlayerActivity extends AppCompatActivity {
                             .beginTransaction()
                             .addToBackStack(TAG)
                             .add(R.id.Frame_current, fragment, TAG)
-                            .hide(new MainFragment())
                             .show(fragment)
-
                             .commit();
 
                     layout.setVisibility(View.GONE);
@@ -148,15 +132,7 @@ public class PlayerActivity extends AppCompatActivity {
         });
     }
 
-    private void loadMainFragment() {
-        MainFragment fragment = new MainFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
 
-                .replace(R.id.Frame_music, fragment)
-                .commit();
-
-    }
 
 
     @Override
@@ -195,12 +171,7 @@ public class PlayerActivity extends AppCompatActivity {
             frameMusic.setVisibility(View.VISIBLE);
             layout.setVisibility(View.VISIBLE);
             super.onBackPressed();
-//            if (getFragmentManager().getBackStackEntryCount()>1){
-//                getFragmentManager().popBackStack();
-//            }
-//            else {
-//               super.onBackPressed();
-//            }
+
         }
     }
     private void checkPermissin(){

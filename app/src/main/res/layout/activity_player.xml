@@ -42,6 +42,7 @@
             app:layout_constraintBottom_toTopOf="@id/constControls"
             android:layout_width="match_parent"
             android:layout_height="0dp">
+            <include layout="@layout/tabs_main"/>
 
         </FrameLayout>
     <android.support.constraint.ConstraintLayout
