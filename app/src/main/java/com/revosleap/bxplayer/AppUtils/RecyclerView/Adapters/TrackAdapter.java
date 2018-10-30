@@ -1,6 +1,9 @@
 package com.revosleap.bxplayer.AppUtils.RecyclerView.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,21 +14,25 @@ import android.widget.TextView;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 
+import com.revosleap.bxplayer.AppUtils.Utils.AudioUtils;
+import com.revosleap.bxplayer.AppUtils.Utils.ImageCover;
 import com.revosleap.bxplayer.R;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.Holder> {
     List<AudioModel> tracklist;
+    private final SongSelectedListener mSongSelectedListener;
 
-  //  private final TrackAdapter.SongSelectedListener mSongSelectedListener;
-    //private final Activity mActivity;
-    Context context;
+    private Activity mActivity;
 
-    public TrackAdapter(List<AudioModel> tracklist, final Context activity) {
+    public TrackAdapter(List<AudioModel> tracklist, final Activity activity,SongSelectedListener listener) {
         this.tracklist = tracklist;
-        context = activity;
-//        mSongSelectedListener= (SongSelectedListener) activity;
+        mActivity = activity;
+       this.mSongSelectedListener = listener;
+
     }
 
     @NonNull
@@ -44,6 +51,11 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.Holder> {
 
         holder.artist.setText(title);
         holder.title.setText(artist);
+//        if (AudioUtils.cover(path)!=null){
+//            holder.trackImage.setImageBitmap(new ImageCover.execute(path));
+//        }
+
+
 
     }
 
@@ -56,6 +68,9 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.Holder> {
     public int getItemCount() {
         return tracklist.size();
     }
+    public interface SongSelectedListener {
+        void onSongSelected(@NonNull final AudioModel song, @NonNull final List<AudioModel> songs);
+    }
 
     public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView trackImage;
@@ -65,13 +80,15 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.Holder> {
             trackImage= itemView.findViewById(R.id.imageView2);
             title= itemView.findViewById(R.id.textViewTitleTrack);
             artist= itemView.findViewById(R.id.textViewArtistTrack);
+            itemView.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View view) {
-            final AudioModel songs= tracklist.get(getAdapterPosition());
-        //    mSongSelectedListener.onSongSelected(songs, tracklist);
+            final AudioModel song = tracklist.get(getAdapterPosition());
+            mSongSelectedListener.onSongSelected(song, tracklist);
+
         }
     }
 }

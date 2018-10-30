@@ -23,35 +23,43 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.revosleap.bxplayer.AppUtils.Adapters.TabAdapter;
-import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
-
-import com.revosleap.bxplayer.AppUtils.Player.AudioPlayerService;
 import com.revosleap.bxplayer.Fragments.InfoFragment;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PlayerActivity extends AppCompatActivity {
 
 
-    public static final String Broadcast_PLAY_NEW_AUDIO = "com.revosleap.bxplayer.PlayNewAudio";
     @BindView(R.id.Frame_music)
     FrameLayout frameMusic;
 
-    private AudioPlayerService player;
-    boolean serviceBound = false;
-    ArrayList<AudioModel> audioList;
 
-
-    ImageView cover, mainbg;
+    ImageView cover;
     TextView title, artist;
     Button prev, next, play;
+    @BindView(R.id.tabsMain)
+    TabLayout tabLayout;
+    @BindView(R.id.containerMain)
+    ViewPager mViewPager;
+    @BindView(R.id.imageView)
+    ImageView imageView;
+    @BindView(R.id.textViewArtName)
+    TextView textViewArtName;
+    @BindView(R.id.textViewTitle)
+    TextView textViewTitle;
+    @BindView(R.id.buttonPrev)
+    Button buttonPrev;
+    @BindView(R.id.buttonPlay)
+    Button buttonPlay;
+    @BindView(R.id.buttonNext)
+    Button buttonNext;
+    @BindView(R.id.constControls)
     ConstraintLayout layout;
+    @BindView(R.id.Frame_current)
+    FrameLayout FrameCurrent;
 
-
-    byte[] art;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,39 +68,26 @@ public class PlayerActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        cover = findViewById(R.id.imageView);
-        title = findViewById(R.id.textViewTitle);
-        artist = findViewById(R.id.textViewArtName);
-        prev = findViewById(R.id.buttonPrev);
-        play = findViewById(R.id.buttonPlay);
-        next = findViewById(R.id.buttonNext);
-        layout = findViewById(R.id.constControls);
+
 
 //        title.setSelected(true);
 //        artist.setSelected(true);
         checkPermissin();
         control();
-       tabs();
+        tabs();
+        onViewClicked(findViewById(android.R.id.content));
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cover2);
-
-
-
-
 
 
 
 
     }
 
-    private void tabs(){
-        ViewPager mViewPager = findViewById(R.id.containerMain);
-        TabLayout tabLayout = findViewById(R.id.tabsMain);
+    private void tabs() {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addTab(tabLayout.newTab().setText("Favorites"));
         tabLayout.addTab(tabLayout.newTab().setText("Playlist"));
@@ -100,10 +95,10 @@ public class PlayerActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Albums"));
         tabLayout.addTab(tabLayout.newTab().setText("Artists"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        TabAdapter adapter=new TabAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+        TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         mViewPager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-        mViewPager.setCurrentItem(2,true);
+        mViewPager.setCurrentItem(2, true);
     }
 
 
@@ -131,8 +126,6 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     @Override
@@ -174,13 +167,26 @@ public class PlayerActivity extends AppCompatActivity {
 
         }
     }
-    private void checkPermissin(){
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-            if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                    !=PackageManager.PERMISSION_GRANTED){
+
+    private void checkPermissin() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
+        }
+    }
+
+    @OnClick({R.id.buttonPrev, R.id.buttonPlay, R.id.buttonNext})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.buttonPrev:
+                break;
+            case R.id.buttonPlay:
+                break;
+            case R.id.buttonNext:
+                break;
         }
     }
 }
