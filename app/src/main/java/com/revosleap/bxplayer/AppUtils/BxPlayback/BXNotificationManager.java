@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.RectF;
 import android.graphics.drawable.VectorDrawable;
 import android.media.session.MediaSessionManager;
 import android.os.Build;
@@ -16,6 +18,8 @@ import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -23,6 +27,7 @@ import android.text.Spanned;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 import com.revosleap.bxplayer.AppUtils.Utils.AudioUtils;
+import com.revosleap.bxplayer.Fragments.InfoFragment;
 import com.revosleap.bxplayer.PlayerActivity;
 import com.revosleap.bxplayer.R;
 
@@ -180,20 +185,22 @@ public class BXNotificationManager {
 
     }
 
-    private Bitmap getLargeIcon() {
+    private Bitmap getLargeIcon(Bitmap image) {
 
-        final VectorDrawable vectorDrawable = (VectorDrawable) bxPlayerService.getDrawable(R.drawable.cover2);
+       // final VectorDrawable vectorDrawable = (VectorDrawable) bxPlayerService.getDrawable(R.drawable.cover2);
 
-        final int largeIconSize = bxPlayerService.getResources().getDimensionPixelSize(R.dimen.notification_large_dim);
-        final Bitmap bitmap = Bitmap.createBitmap(largeIconSize, largeIconSize, Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(bitmap);
+        final int largeIconSize = context.getResources().getDimensionPixelSize(R.dimen.notification_large_dim);
+        Bitmap map = Bitmap.createBitmap(largeIconSize, largeIconSize, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(map);
+        canvas.drawColor(Color.TRANSPARENT);
+        Bitmap bitmap= image.copy(Bitmap.Config.ARGB_8888,true);
+        int height=bitmap.getHeight();
+        int width= bitmap.getWidth();
+        bitmap.setWidth(width*5/10);
+        bitmap.setHeight(height*5/10);
+        canvas.drawBitmap(map,2,2,null);
+        Bitmap resized= Bitmap.createScaledBitmap(image,50,50,true);
 
-        if (vectorDrawable != null) {
-            vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            vectorDrawable.setAlpha(100);
-            vectorDrawable.draw(canvas);
-        }
-
-        return bitmap;
+        return resized;
     }
 }

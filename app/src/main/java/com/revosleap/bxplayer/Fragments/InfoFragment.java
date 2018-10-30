@@ -37,6 +37,7 @@ import butterknife.Unbinder;
 
 
 public class InfoFragment extends Fragment {
+    private View view;
     @BindView(R.id.imageViewInfo)
     ImageView imageViewInfo;
     @BindView(R.id.textViewInfoTitle)
@@ -103,7 +104,7 @@ public class InfoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.info, container, false);
+        view = inflater.inflate(R.layout.info, container, false);
         unbinder = ButterKnife.bind(this, view);
         onViewClicked(view);
         doBindService();
@@ -122,6 +123,25 @@ public class InfoFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        doUnbindService();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        doUnbindService();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        doBindService();
+    }
+
     private void doBindService() {
         // Establish a connection with the service.  We use an explicit
         // class name because we want a specific service implementation that
@@ -199,14 +219,19 @@ public class InfoFragment extends Fragment {
     private void updatePlayingStatus() {
         final int drawable = mPlayerAdapter.getState() != PlaybackInfoListener.State.PAUSED ?
                 R.drawable.pause : R.drawable.play_icon;
-       buttonInfoPlay.post(new Runnable() {
-            @Override
-            public void run() {
-               buttonInfoPlay.setBackgroundResource(drawable);
-            }
-        });
+       try {
+           buttonInfoPlay.post(new Runnable() {
+               @Override
+               public void run() {
+                   buttonInfoPlay.setBackgroundResource(drawable);
+               }
+           });
+       }catch (Exception e){
+           e.printStackTrace();
+       }
     }
     private void updatePlayingInfo(boolean restore, boolean startPlay) {
+        unbinder = ButterKnife.bind(this, view);
 
         if (startPlay) {
             mPlayerAdapter.getMediaPlayer().start();
