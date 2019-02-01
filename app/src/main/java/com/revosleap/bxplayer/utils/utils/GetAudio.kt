@@ -8,7 +8,7 @@ import com.revosleap.bxplayer.utils.models.AudioModel
 import java.util.*
 
 class GetAudio {
-    fun geAllAudio(context: Context): List<AudioModel> {
+    fun geAllAudio(context: Context): MutableList<AudioModel> {
 
         val temAudioList = ArrayList<AudioModel>()
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -38,8 +38,10 @@ class GetAudio {
                     e.printStackTrace()
                 }
 
+                if(duration.toLong() >= 30000){
+                    temAudioList.add(model)
+                }
 
-                temAudioList.add(model)
             }
             cursor.close()
         } else

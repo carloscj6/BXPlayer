@@ -21,7 +21,7 @@ import android.support.v4.media.session.MediaSessionCompat
 
 import com.revosleap.bxplayer.utils.models.AudioModel
 import com.revosleap.bxplayer.utils.utils.AudioUtils
-import com.revosleap.bxplayer.ui.fragments.activities.PlayerActivity
+import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.R
 
 class BXNotificationManager internal constructor(private val bxPlayerService: BxPlayerService) {
@@ -55,7 +55,7 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
             PREV_ACTION -> icon = R.drawable.previous
             PLAY_PAUSE_ACTION ->
 
-                icon = if (bxPlayerService.mediaPlayerHolder.state != PlaybackInfoListener.State.PAUSED)
+                icon = if (bxPlayerService.mediaPlayerHolder?.state != PlaybackInfoListener.State.PAUSED)
                     R.drawable.pause
                 else
                     R.drawable.play_icon
@@ -67,7 +67,7 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
 
     fun createNotification(): Notification {
 
-        val song = bxPlayerService.mediaPlayerHolder.currentSong
+        val song = bxPlayerService.mediaPlayerHolder?.currentSong
 
         notificationBuilder = NotificationCompat.Builder(bxPlayerService, channelId)
 
@@ -85,8 +85,8 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
         val largeIcon = BitmapFactory.decodeResource(context.resources,
                 R.drawable.cover2)
         val cover: Bitmap
-        if (AudioUtils.cover(song.path) != null) {
-            cover = AudioUtils.cover(song.path)
+        if (AudioUtils.cover(song.path!!) != null) {
+            cover = AudioUtils.cover(song.path!!)
         } else
             cover = largeIcon
 
@@ -135,8 +135,8 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
         val albumArt = BitmapFactory.decodeResource(context.resources,
                 R.drawable.cover2) //replace with medias albumArt
         // Update the current metadata
-        if (AudioUtils.cover(mSelectedSong.path) != null) {
-            cover = AudioUtils.cover(mSelectedSong.path)
+        if (AudioUtils.cover(mSelectedSong.path!!) != null) {
+            cover = AudioUtils.cover(mSelectedSong.path!!)
         } else
             cover = albumArt
         mediaSession!!.setMetadata(MediaMetadataCompat.Builder()

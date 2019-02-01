@@ -497,8 +497,8 @@ class AudioPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         val albumArt = BitmapFactory.decodeResource(resources,
                 R.drawable.cover2) //replace with medias albumArt
         // Update the current metadata
-        if (AudioUtils.cover(activeAudio!!.path) != null) {
-            cover = AudioUtils.cover(activeAudio!!.path)
+        if (AudioUtils.cover(activeAudio!!.path!!) != null) {
+            cover = AudioUtils.cover(activeAudio!!.path!!)
         } else
             cover = albumArt
         mediaSession!!.setMetadata(MediaMetadataCompat.Builder()
@@ -534,8 +534,8 @@ class AudioPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         val largeIcon = BitmapFactory.decodeResource(resources,
                 R.drawable.cover2)
         val cover: Bitmap
-        if (AudioUtils.cover(activeAudio!!.path) != null) {
-            cover = AudioUtils.cover(activeAudio!!.path)
+        if (AudioUtils.cover(activeAudio!!.path!!) != null) {
+            cover = AudioUtils.cover(activeAudio!!.path!!)
         } else
             cover = largeIcon
 

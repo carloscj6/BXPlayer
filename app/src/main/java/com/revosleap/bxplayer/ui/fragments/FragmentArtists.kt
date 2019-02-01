@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.revosleap.bxplayer.utils.adapters.ArtistAdapter
 import com.revosleap.bxplayer.utils.utils.GetAudio
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.utils.models.AudioModel
 import kotlinx.android.synthetic.main.fragment_artists.*
 
 
@@ -18,14 +19,13 @@ class FragmentArtists : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.fragment_artists, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_artists, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val models = GetAudio().geAllAudio(activity)
-        val adapterArt = ArtistAdapter(models, activity)
+        val models = GetAudio().geAllAudio(activity!!)
+        val adapterArt = ArtistAdapter(models, activity!!)
         artistrecycler.apply {
             adapter = adapterArt
             layoutManager = LinearLayoutManager(activity)

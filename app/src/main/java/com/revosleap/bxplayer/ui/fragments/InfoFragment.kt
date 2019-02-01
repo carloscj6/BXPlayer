@@ -39,7 +39,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
             mMusicNotificationManager = mMusicService!!.musicNotificationManager
             if (mPlaybackListener == null) {
                 mPlaybackListener = PlaybackListener()
-                mPlayerAdapter!!.setPlaybackInfoListener(mPlaybackListener)
+                mPlayerAdapter!!.setPlaybackInfoListener(mPlaybackListener!!)
             }
         }
 
@@ -151,9 +151,8 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
         mSelectedArtist = selectedSong.artist
         val duration = selectedSong.duration
-        seekBarInfo.setMax(duration)
-
-        textViewDuration.setText(AudioUtils.formatDuration(duration))
+        seekBarInfo.max = duration
+        textViewDuration.text = AudioUtils.formatDuration(duration)
 
         textViewInfoTitle.post(Runnable { textViewInfoTitle.setText(selectedSong.title) })
 
@@ -168,9 +167,9 @@ class InfoFragment : Fragment(), View.OnClickListener {
                 //stop foreground if coming from pause state
                 if (mMusicService!!.isRestoredFromPause) {
                     mMusicService!!.stopForeground(false)
-                    mMusicService!!.musicNotificationManager.notificationManager
+                    mMusicService!!.musicNotificationManager?.notificationManager!!
                             .notify(BXNotificationManager.NOTIFICATION_ID,
-                                    mMusicService!!.musicNotificationManager.notificationBuilder.build())
+                                    mMusicService!!.musicNotificationManager?.notificationBuilder?.build())
                     mMusicService!!.isRestoredFromPause = false
                 }
             }, 250)

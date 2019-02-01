@@ -45,7 +45,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
             mMusicNotificationManager = mMusicService!!.musicNotificationManager
             if (mPlaybackListener == null) {
                 mPlaybackListener = PlaybackListener()
-                mPlayerAdapter!!.setPlaybackInfoListener(mPlaybackListener)
+                mPlayerAdapter!!.setPlaybackInfoListener(mPlaybackListener!!)
             }
         }
 
@@ -75,8 +75,8 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         val view = inflater.inflate(R.layout.fragment_tracks, container, false)
 
 
-        list = GetAudio().geAllAudio(activity)
-        trackAdapter = TrackAdapter(list, activity, this)
+        list = GetAudio().geAllAudio(activity!!.baseContext)
+        trackAdapter = TrackAdapter(list, activity!!, this)
 
         return view
 
@@ -119,7 +119,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         //Check is service is active
         if (!serviceBound) {
             //Store Serializable audioList to SharedPreferences
-            val storage = StorageUtil(activity)
+            val storage = StorageUtil(activity!!)
             storage.storeAudio(list)
             storage.storeAudioIndex(audioIndex)
 
@@ -128,7 +128,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
             activity!!.bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         } else {
             //Store the new audioIndex to SharedPreferences
-            val storage = StorageUtil(activity)
+            val storage = StorageUtil(activity!!)
             storage.storeAudioIndex(audioIndex)
 
             //Service is active

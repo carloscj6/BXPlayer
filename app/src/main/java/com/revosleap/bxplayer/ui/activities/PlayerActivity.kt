@@ -61,14 +61,16 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
-        checkPermissin()
+        doBindService()
+        checkPermission()
         control()
         tabs()
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
-        doBindService()
+        buttonNext.setOnClickListener(this)
+        buttonPlay.setOnClickListener(this)
+        buttonPrev.setOnClickListener(this)
 
 
     }
@@ -184,7 +186,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun checkPermissin() {
+    private fun checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,

@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
 import android.content.Context.AUDIO_SERVICE
 
 
-class MediaPlayerHolder internal constructor(private val mMusicService: BxPlayerService?)
+ class MediaPlayerHolder internal constructor(private val mMusicService: BxPlayerService?)
     : PlayerAdapter, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
     // we have full audio focus
     private var ongoingCall: Boolean = false
