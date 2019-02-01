@@ -58,6 +58,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeSeekbar()
+        setClickListeners()
     }
 
     override fun onDestroy() {
@@ -106,7 +107,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
                     userSelectedPosition = progress
 
                 }
-                textViewProgress.setText(AudioUtils.formatDuration(progress))
+                textViewProgress.text = AudioUtils.formatDuration(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -151,15 +152,15 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
         mSelectedArtist = selectedSong.artist
         val duration = selectedSong.duration
-        seekBarInfo.max = duration
-        textViewDuration.text = AudioUtils.formatDuration(duration)
+        seekBarInfo?.max = duration
+        textViewDuration?.text = AudioUtils.formatDuration(duration)
 
-        textViewInfoTitle.post(Runnable { textViewInfoTitle.setText(selectedSong.title) })
+        textViewInfoTitle?.post(Runnable { textViewInfoTitle.setText(selectedSong.title) })
 
-        textViewInfoArtist.setText(selectedSong.artist)
+        textViewInfoArtist?.setText(selectedSong.artist)
 
         if (restore) {
-            seekBarInfo.setProgress(mPlayerAdapter!!.playerPosition)
+            seekBarInfo?.setProgress(mPlayerAdapter!!.playerPosition)
             updatePlayingStatus()
             // updateResetStatus(false);
 
@@ -192,6 +193,16 @@ class InfoFragment : Fragment(), View.OnClickListener {
             R.id.buttonInfoAll -> {
             }
         }
+    }
+    private fun setClickListeners(){
+        buttonInfoAll.setOnClickListener(this)
+        buttonInfoFave.setOnClickListener(this)
+        buttonInfoNext.setOnClickListener(this)
+        buttonInfoPlay.setOnClickListener(this)
+        buttonInfoPlaylist.setOnClickListener(this)
+        buttonInfoPrev.setOnClickListener(this)
+        buttonInfoShuffle.setOnClickListener(this)
+        buttonInfoVol.setOnClickListener(this)
     }
 
     internal inner class PlaybackListener : PlaybackInfoListener() {

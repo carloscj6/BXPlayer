@@ -23,6 +23,7 @@ import com.revosleap.bxplayer.utils.models.AudioModel
 import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.R
+import java.io.InputStream
 
 class BXNotificationManager internal constructor(private val bxPlayerService: BxPlayerService) {
     private val channelId = "com.revosleap.bxplayer.channelId"
@@ -82,20 +83,10 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
         updateMetaData(song!!)
         val artist = song.artist
         val songTitle = song.title
-        val largeIcon = BitmapFactory.decodeResource(context.resources,
-                R.drawable.cover2)
-        val cover: Bitmap
-        if (AudioUtils.cover(song.path!!) != null) {
-            cover = AudioUtils.cover(song.path!!)
-        } else
-            cover = largeIcon
-
-        //  final Spanned spanned = Utils.buildSpanned(mMusicService.getString(R.string.playing_song, artist, songTitle));
-
         notificationBuilder!!
                 .setShowWhen(false)
                 .setSmallIcon(R.drawable.ic_if_speaker)
-                .setLargeIcon(cover)
+                .setLargeIcon(AudioUtils.cover(song.path!!,context))
                 .setColor(context.resources.getColor(R.color.colorAccentLight))
                 .setContentTitle(songTitle)
                 .setContentText(artist)
@@ -131,16 +122,8 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
 
     private fun updateMetaData(mSelectedSong: AudioModel) {
         mediaSession = MediaSessionCompat(context, "BXPlayer")
-        val cover: Bitmap
-        val albumArt = BitmapFactory.decodeResource(context.resources,
-                R.drawable.cover2) //replace with medias albumArt
-        // Update the current metadata
-        if (AudioUtils.cover(mSelectedSong.path!!) != null) {
-            cover = AudioUtils.cover(mSelectedSong.path!!)
-        } else
-            cover = albumArt
         mediaSession!!.setMetadata(MediaMetadataCompat.Builder()
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cover)
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, AudioUtils.cover(mSelectedSong.path!!,context))
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, mSelectedSong.artist)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, mSelectedSong.album)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mSelectedSong.title)

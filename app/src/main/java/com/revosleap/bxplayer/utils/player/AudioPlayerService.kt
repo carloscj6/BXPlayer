@@ -493,16 +493,8 @@ class AudioPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
     }
 
     private fun updateMetaData() {
-        val cover: Bitmap
-        val albumArt = BitmapFactory.decodeResource(resources,
-                R.drawable.cover2) //replace with medias albumArt
-        // Update the current metadata
-        if (AudioUtils.cover(activeAudio!!.path!!) != null) {
-            cover = AudioUtils.cover(activeAudio!!.path!!)
-        } else
-            cover = albumArt
         mediaSession!!.setMetadata(MediaMetadataCompat.Builder()
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cover)
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, AudioUtils.cover(activeAudio!!.path!!,this))
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, activeAudio!!.artist)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, activeAudio!!.album)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, activeAudio!!.title)
@@ -534,10 +526,9 @@ class AudioPlayerService : Service(), MediaPlayer.OnCompletionListener, MediaPla
         val largeIcon = BitmapFactory.decodeResource(resources,
                 R.drawable.cover2)
         val cover: Bitmap
-        if (AudioUtils.cover(activeAudio!!.path!!) != null) {
-            cover = AudioUtils.cover(activeAudio!!.path!!)
-        } else
-            cover = largeIcon
+
+            cover = AudioUtils.cover(activeAudio!!.path!!,this)
+
 
         var notificationBuilder: NotificationCompat.Builder? = null
 

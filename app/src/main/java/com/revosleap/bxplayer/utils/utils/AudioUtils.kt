@@ -1,27 +1,30 @@
 package com.revosleap.bxplayer.utils.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
-
+import com.revosleap.bxplayer.R
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 object AudioUtils {
-    fun cover(path: String): Bitmap {
+    @Throws(IllegalStateException::class)
+    fun cover(path: String, context: Context): Bitmap {
         val retriever = MediaMetadataRetriever()
-        var inputStream: InputStream? = null
+        val inputStream: InputStream?
         retriever.setDataSource(path)
-        if (retriever.embeddedPicture != null) {
+        return if (retriever.embeddedPicture != null) {
             inputStream = ByteArrayInputStream(retriever.embeddedPicture)
-
-
+            val image = BitmapFactory.decodeStream(inputStream)
+            retriever.release()
+            image
+        } else {
+            BitmapFactory.decodeResource(context.resources,
+                    R.drawable.cover2)
         }
-        val image = BitmapFactory.decodeStream(inputStream)
-        retriever.release()
-        return image
     }
 
     fun formatDuration(duration: Int): String {
