@@ -9,7 +9,7 @@
     app:blurRadius="10"
     app:blurImage="@drawable/cover2"
     app:blurOpacity=".4"
-    tools:context=".PlayerActivity">
+    tools:context=".ui.fragments.activities.PlayerActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
