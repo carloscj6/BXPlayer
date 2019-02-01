@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     app:blurRadius="10"
     app:blurImage="@drawable/cover2"
-    app:blurOpacity=".3"
+    app:blurOpacity=".4"
     tools:context=".PlayerActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -37,7 +37,7 @@
             tools:layout_editor_absoluteY="19dp" />
     </android.support.v7.widget.Toolbar>
         <FrameLayout
-            android:id="@+id/Frame_music"
+            android:id="@+id/frame_music"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toTopOf="@id/constControls"
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
     </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
     <FrameLayout
-        android:id="@+id/Frame_current"
+        android:id="@+id/frame_current"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

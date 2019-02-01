@@ -16,14 +16,11 @@ import android.media.session.MediaSessionManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -33,12 +30,10 @@ import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 import com.revosleap.bxplayer.AppUtils.Utils.AudioUtils;
 import com.revosleap.bxplayer.AppUtils.Utils.PlaybackStatus;
 import com.revosleap.bxplayer.AppUtils.Utils.StorageUtil;
-import com.revosleap.bxplayer.Fragments.FragmentTracks;
-import com.revosleap.bxplayer.PlayerActivity;
+import com.revosleap.bxplayer.fragments.FragmentTracks;
 import com.revosleap.bxplayer.R;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AudioPlayerService extends Service implements MediaPlayer.OnCompletionListener,
@@ -692,7 +687,7 @@ MediaPlayer.OnInfoListener,AudioManager.OnAudioFocusChangeListener{
 
     private void register_playNewAudio() {
         //Register playNewMedia receiver
-        IntentFilter filter = new IntentFilter(FragmentTracks.Broadcast_PLAY_NEW_AUDIO);
+        IntentFilter filter = new IntentFilter(FragmentTracks.Companion.getBroadcast_PLAY_NEW_AUDIO());
         registerReceiver(playNewAudio, filter);
     }
 }

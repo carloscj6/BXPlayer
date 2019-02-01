@@ -4,11 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.revosleap.bxplayer.Fragments.FragmentAlbum;
-import com.revosleap.bxplayer.Fragments.FragmentArtists;
-import com.revosleap.bxplayer.Fragments.FragmentFavorites;
-import com.revosleap.bxplayer.Fragments.FragmentPlaylist;
-import com.revosleap.bxplayer.Fragments.FragmentTracks;
+import com.revosleap.bxplayer.fragments.FragmentAlbum;
+import com.revosleap.bxplayer.fragments.FragmentArtists;
+import com.revosleap.bxplayer.fragments.FragmentFavorites;
+import com.revosleap.bxplayer.fragments.FragmentPlaylist;
+import com.revosleap.bxplayer.fragments.FragmentTracks;
 
 public class TabAdapter extends FragmentStatePagerAdapter {
     int tabCount;

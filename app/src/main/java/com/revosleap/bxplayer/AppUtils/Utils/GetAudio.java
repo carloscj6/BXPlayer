@@ -40,11 +40,16 @@ public class GetAudio {
                 String name= cursor.getString(3);
                 String duration=cursor.getString(4);
 
-                model.setTitle(name);
-                model.setAlbum(album);
-                model.setArtist(artist);
-                model.setPath(path);
-                model.setDuration(Integer.parseInt(duration));
+               try {
+                   model.setTitle(name);
+
+                   model.setAlbum(album);
+                   model.setArtist(artist);
+                   model.setPath(path);
+                   model.setDuration(Integer.parseInt(duration));
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
 
 
                 temAudioList.add(model);

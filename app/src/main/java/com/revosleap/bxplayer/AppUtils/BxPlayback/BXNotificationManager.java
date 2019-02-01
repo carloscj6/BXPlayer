@@ -10,24 +10,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.RectF;
-import android.graphics.drawable.VectorDrawable;
 import android.media.session.MediaSessionManager;
 import android.os.Build;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.text.Spanned;
 
 import com.revosleap.bxplayer.AppUtils.Models.AudioModel;
 import com.revosleap.bxplayer.AppUtils.Utils.AudioUtils;
-import com.revosleap.bxplayer.Fragments.InfoFragment;
 import com.revosleap.bxplayer.PlayerActivity;
 import com.revosleap.bxplayer.R;
 
@@ -202,5 +196,8 @@ public class BXNotificationManager {
         Bitmap resized= Bitmap.createScaledBitmap(image,50,50,true);
 
         return resized;
+    }
+    public interface BitmapColors{
+        void setColors(int color);
     }
 }
