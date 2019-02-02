@@ -14,13 +14,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
+import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
-import com.revosleap.bxplayer.utils.playback.BxPlayerService
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
 import com.revosleap.bxplayer.utils.playback.PlayerAdapter
 import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
-import com.revosleap.bxplayer.R
 import kotlinx.android.synthetic.main.info.*
 
 
@@ -29,12 +29,12 @@ class InfoFragment : Fragment(), View.OnClickListener {
     private var mIsBound: Boolean = false
     private var mSelectedArtist: String? = null
     private var mPlayerAdapter: PlayerAdapter? = null
-    internal var mMusicService: BxPlayerService? = null
+    internal var mMusicService: MusicPlayerService? = null
     private var mMusicNotificationManager: BXNotificationManager? = null
     private var mPlaybackListener: PlaybackListener? = null
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            mMusicService = (service as BxPlayerService.BXBinder).instance
+            mMusicService = (service as MusicPlayerService.MusicBinder).serviceInstance
             mPlayerAdapter = mMusicService!!.mediaPlayerHolder
             mMusicNotificationManager = mMusicService!!.musicNotificationManager
             if (mPlaybackListener == null) {
@@ -82,10 +82,10 @@ class InfoFragment : Fragment(), View.OnClickListener {
         // we know will be running in our own process (and thus won't be
         // supporting component replacement by other applications).
         activity!!.bindService(Intent(activity,
-                BxPlayerService::class.java), mConnection, Context.BIND_AUTO_CREATE)
+                MusicPlayerService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         mIsBound = true
 
-        val startNotStickyIntent = Intent(activity, BxPlayerService::class.java)
+        val startNotStickyIntent = Intent(activity, MusicPlayerService::class.java)
         activity!!.startService(startNotStickyIntent)
     }
 
@@ -194,7 +194,8 @@ class InfoFragment : Fragment(), View.OnClickListener {
             }
         }
     }
-    private fun setClickListeners(){
+
+    private fun setClickListeners() {
         buttonInfoAll.setOnClickListener(this)
         buttonInfoFave.setOnClickListener(this)
         buttonInfoNext.setOnClickListener(this)
