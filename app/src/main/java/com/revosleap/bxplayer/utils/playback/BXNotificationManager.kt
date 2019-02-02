@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.media.session.MediaSessionManager
@@ -23,12 +22,12 @@ import com.revosleap.bxplayer.utils.models.AudioModel
 import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.R
-import java.io.InputStream
+import com.revosleap.bxplayer.services.MusicPlayerService
 
-class BXNotificationManager internal constructor(private val bxPlayerService: BxPlayerService) {
+class BXNotificationManager internal constructor(private val musicPlayerService: MusicPlayerService) {
     private val channelId = "com.revosleap.bxplayer.channelId"
     private val requestCode = 100
-    val notificationManager: NotificationManager = bxPlayerService.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    val notificationManager: NotificationManager = musicPlayerService.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private var mediaSession: MediaSessionCompat? = null
     private var mediaSessionManager: MediaSessionManager? = null
     private var transportControls: MediaControllerCompat.TransportControls? = null
@@ -37,7 +36,7 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
     private val context: Context
 
     init {
-        context = bxPlayerService.application
+        context = musicPlayerService.application
     }
 
     private fun playerAction(action: String): PendingIntent {
@@ -45,7 +44,7 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
         val pauseIntent = Intent()
         pauseIntent.action = action
 
-        return PendingIntent.getBroadcast(bxPlayerService, requestCode, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getBroadcast(musicPlayerService, requestCode, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun notificationAction(action: String): NotificationCompat.Action {
@@ -56,7 +55,7 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
             PREV_ACTION -> icon = R.drawable.previous
             PLAY_PAUSE_ACTION ->
 
-                icon = if (bxPlayerService.mediaPlayerHolder?.state != PlaybackInfoListener.State.PAUSED)
+                icon = if (musicPlayerService.mediaPlayerHolder?.state != PlaybackInfoListener.State.PAUSED)
                     R.drawable.pause
                 else
                     R.drawable.play_icon
@@ -68,17 +67,17 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
 
     fun createNotification(): Notification {
 
-        val song = bxPlayerService.mediaPlayerHolder?.currentSong
+        val song = musicPlayerService.mediaPlayerHolder?.currentSong
 
-        notificationBuilder = NotificationCompat.Builder(bxPlayerService, channelId)
+        notificationBuilder = NotificationCompat.Builder(musicPlayerService, channelId)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
 
-        val openPlayerIntent = Intent(bxPlayerService, PlayerActivity::class.java)
+        val openPlayerIntent = Intent(musicPlayerService, PlayerActivity::class.java)
         openPlayerIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val contentIntent = PendingIntent.getActivity(bxPlayerService, requestCode,
+        val contentIntent = PendingIntent.getActivity(musicPlayerService, requestCode,
                 openPlayerIntent, 0)
         updateMetaData(song!!)
         val artist = song.artist
@@ -107,10 +106,10 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
 
         if (notificationManager.getNotificationChannel(channelId) == null) {
             val notificationChannel = NotificationChannel(channelId,
-                    bxPlayerService.getString(R.string.app_name),
+                    musicPlayerService.getString(R.string.app_name),
                     NotificationManager.IMPORTANCE_LOW)
 
-            notificationChannel.description = bxPlayerService.getString(R.string.app_name)
+            notificationChannel.description = musicPlayerService.getString(R.string.app_name)
 
             notificationChannel.enableLights(false)
             notificationChannel.enableVibration(false)
@@ -152,7 +151,7 @@ class BXNotificationManager internal constructor(private val bxPlayerService: Bx
 
     private fun getLargeIcon(image: Bitmap): Bitmap {
 
-        // final VectorDrawable vectorDrawable = (VectorDrawable) bxPlayerService.getDrawable(R.drawable.cover2);
+        // final VectorDrawable vectorDrawable = (VectorDrawable) musicPlayerService.getDrawable(R.drawable.cover2);
 
         val largeIconSize = context.resources.getDimensionPixelSize(R.dimen.notification_large_dim)
         val map = Bitmap.createBitmap(largeIconSize, largeIconSize, Bitmap.Config.ARGB_8888)

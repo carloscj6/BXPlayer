@@ -23,16 +23,17 @@ import com.revosleap.bxplayer.utils.adapters.TrackAdapter
 import com.revosleap.bxplayer.utils.utils.GetAudio
 import com.revosleap.bxplayer.utils.utils.StorageUtil
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.services.MusicPlayerService
 import kotlinx.android.synthetic.main.fragment_tracks.*
 import java.util.*
 
 
 class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
 
-    private var player: AudioPlayerService? = null
-    internal var serviceBound = false
-    internal var list = mutableListOf<AudioModel>()
-    internal var mMusicService: BxPlayerService? = null
+
+    private var serviceBound = false
+    private var list = mutableListOf<AudioModel>()
+    private var mMusicService: MusicPlayerService? = null
     private var mIsBound: Boolean = false
     private var trackAdapter: TrackAdapter? = null
     private var mPlayerAdapter: PlayerAdapter? = null
@@ -40,7 +41,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
     private var mPlaybackListener: PlaybackListener? = null
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            mMusicService = (service as BxPlayerService.BXBinder).instance
+            mMusicService = (service as MusicPlayerService.MusicBinder).serviceInstance
             mPlayerAdapter = mMusicService!!.mediaPlayerHolder
             mMusicNotificationManager = mMusicService!!.musicNotificationManager
             if (mPlaybackListener == null) {
@@ -54,18 +55,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         }
     }
 
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            val binder = service as AudioPlayerService.LocalBinder
-            player = binder.service
-            serviceBound = true
-        }
 
-        override fun onServiceDisconnected(name: ComponentName) {
-            serviceBound = false
-        }
-    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -125,7 +115,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
 
             val playerIntent = Intent(activity, AudioPlayerService::class.java)
             activity!!.startService(playerIntent)
-            activity!!.bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+
         } else {
             //Store the new audioIndex to SharedPreferences
             val storage = StorageUtil(activity!!)
@@ -157,15 +147,11 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
     }
 
     private fun doBindService() {
-        // Establish a connection with the service.  We use an explicit
-        // class name because we want a specific service implementation that
-        // we know will be running in our own process (and thus won't be
-        // supporting component replacement by other applications).
         activity!!.bindService(Intent(activity,
-                BxPlayerService::class.java), mConnection, Context.BIND_AUTO_CREATE)
+                MusicPlayerService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         mIsBound = true
 
-        val startNotStickyIntent = Intent(activity, BxPlayerService::class.java)
+        val startNotStickyIntent = Intent(activity, MusicPlayerService::class.java)
         activity!!.startService(startNotStickyIntent)
     }
 

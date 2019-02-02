@@ -31,9 +31,9 @@ class BxPlayerService : Service() {
 
     override fun onBind(intent: Intent): IBinder? {
         if (mediaPlayerHolder == null) {
-            mediaPlayerHolder = MediaPlayerHolder(this)
-            musicNotificationManager = BXNotificationManager(this)
-            mediaPlayerHolder!!.registerNotificationActionsReceiver(true)
+//            mediaPlayerHolder = MediaPlayerHolder(this)
+//            musicNotificationManager = BXNotificationManager(this)
+//            mediaPlayerHolder!!.registerNotificationActionsReceiver(true)
         }
         return mIBinder
     }

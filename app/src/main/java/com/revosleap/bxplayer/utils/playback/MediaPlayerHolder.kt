@@ -4,6 +4,7 @@ import android.app.Activity
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.AUDIO_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioAttributes
@@ -13,7 +14,7 @@ import android.os.PowerManager
 import android.support.v4.media.session.MediaSessionCompat
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
-
+import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.utils.models.Album
 import com.revosleap.bxplayer.utils.models.AudioModel
 import com.revosleap.bxplayer.utils.player.EqualizerUtils
@@ -21,14 +22,12 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-import android.content.Context.AUDIO_SERVICE
 
-
- class MediaPlayerHolder internal constructor(private val mMusicService: BxPlayerService?)
+class MediaPlayerHolder internal constructor(private val mMusicService: MusicPlayerService?)
     : PlayerAdapter, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
     // we have full audio focus
     private var ongoingCall: Boolean = false
-    private val mContext: Context
+    private val mContext: Context = mMusicService!!.applicationContext
     private val mAudioManager: AudioManager
     private var mMediaPlayer: MediaPlayer? = null
     private var mPlaybackInfoListener: PlaybackInfoListener? = null
@@ -76,7 +75,6 @@ import android.content.Context.AUDIO_SERVICE
     }
 
     init {
-        mContext = mMusicService!!.applicationContext
         mAudioManager = mContext.getSystemService(AUDIO_SERVICE) as AudioManager
     }
 
@@ -106,9 +104,9 @@ import android.content.Context.AUDIO_SERVICE
         }
     }
 
-    override fun registerNotificationActionsReceiver(isReceiver: Boolean) {
+    override fun registerNotificationActionsReceiver(isRegister: Boolean) {
 
-        if (isReceiver) {
+        if (isRegister) {
             registerActionsReceiver()
         } else {
             unregisterActionsReceiver()
@@ -139,7 +137,7 @@ import android.content.Context.AUDIO_SERVICE
         }
 
         if (sReplaySong) {
-            if (isMediaPlayer) {
+            if (isMediaPlayer()) {
                 resetSong()
             }
             sReplaySong = false
@@ -188,7 +186,7 @@ import android.content.Context.AUDIO_SERVICE
     }
 
     private fun resumeMediaPlayer() {
-        if (!isPlaying) {
+        if (!isPlaying()) {
             mMediaPlayer!!.start()
             setStatus(PlaybackInfoListener.State.RESUMED)
             mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
@@ -239,7 +237,7 @@ import android.content.Context.AUDIO_SERVICE
     }
 
     private fun updateProgressCallbackTask() {
-        if (isMediaPlayer && mMediaPlayer!!.isPlaying) {
+        if (isMediaPlayer() && mMediaPlayer!!.isPlaying) {
             val currentPosition = mMediaPlayer!!.currentPosition
             if (mPlaybackInfoListener != null) {
                 mPlaybackInfoListener!!.onPositionChanged(currentPosition)
@@ -248,7 +246,7 @@ import android.content.Context.AUDIO_SERVICE
     }
 
     override fun instantReset() {
-        if (isMediaPlayer) {
+        if (isMediaPlayer()) {
             if (mMediaPlayer!!.currentPosition < 5000) {
                 skip(false)
             } else {
@@ -310,7 +308,7 @@ import android.content.Context.AUDIO_SERVICE
     }
 
     override fun release() {
-        if (isMediaPlayer) {
+        if (isMediaPlayer()) {
             EqualizerUtils.closeAudioEffectSession(mContext, mMediaPlayer!!.audioSessionId)
             mMediaPlayer!!.release()
             mMediaPlayer = null
@@ -320,12 +318,12 @@ import android.content.Context.AUDIO_SERVICE
     }
 
     override fun isPlaying(): Boolean {
-        return isMediaPlayer && mMediaPlayer!!.isPlaying
+        return isMediaPlayer() && mMediaPlayer!!.isPlaying
     }
 
     override fun resumeOrPause() {
 
-        if (isPlaying) {
+        if (isPlaying()) {
             pauseMediaPlayer()
         } else {
             resumeMediaPlayer()
@@ -370,7 +368,7 @@ import android.content.Context.AUDIO_SERVICE
     }
 
     override fun seekTo(position: Int) {
-        if (isMediaPlayer) {
+        if (isMediaPlayer()) {
             mMediaPlayer!!.seekTo(position)
         }
     }
@@ -423,7 +421,7 @@ import android.content.Context.AUDIO_SERVICE
                     BluetoothDevice.ACTION_ACL_DISCONNECTED -> if (mSelectedSong != null) {
                         pauseMediaPlayer()
                     }
-                    BluetoothDevice.ACTION_ACL_CONNECTED -> if (mSelectedSong != null && !isPlaying) {
+                    BluetoothDevice.ACTION_ACL_CONNECTED -> if (mSelectedSong != null && !isPlaying()) {
                         resumeMediaPlayer()
                     }
                     Intent.ACTION_HEADSET_PLUG -> if (mSelectedSong != null) {
@@ -431,7 +429,7 @@ import android.content.Context.AUDIO_SERVICE
                             //0 means disconnected
                             0 -> pauseMediaPlayer()
                             //1 means connected
-                            1 -> if (!isPlaying) {
+                            1 -> if (!isPlaying()) {
                                 resumeMediaPlayer()
                             }
                         }
@@ -454,7 +452,7 @@ import android.content.Context.AUDIO_SERVICE
                 when (state) {
                     //if at least one call exists or the phone is ringing
                     //pause the MediaPlayer
-                    TelephonyManager.CALL_STATE_OFFHOOK, TelephonyManager.CALL_STATE_RINGING -> if (isPlaying) {
+                    TelephonyManager.CALL_STATE_OFFHOOK, TelephonyManager.CALL_STATE_RINGING -> if (isPlaying()) {
                         pauseMediaPlayer()
                         ongoingCall = true
                     }

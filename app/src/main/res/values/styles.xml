@@ -54,4 +54,6 @@
         <item name="android:thumbTint">?attr/accent_color</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
 </resources>
