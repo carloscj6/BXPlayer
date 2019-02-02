@@ -107,7 +107,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
                     userSelectedPosition = progress
 
                 }
-                textViewProgress.text = AudioUtils.formatDuration(progress)
+                textViewProgress?.text = AudioUtils.formatDuration(progress)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
