@@ -101,7 +101,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
     override fun onSongSelected(song: AudioModel, songs: List<AudioModel>) {
         mPlayerAdapter!!.setCurrentSong(song, songs)
         mPlayerAdapter!!.initMediaPlayer()
-        mPlayerAdapter!!.mediaPlayer.start()
+        mPlayerAdapter!!.getMediaPlayer()?.start()
         mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
                     mMusicNotificationManager!!.createNotification())
 

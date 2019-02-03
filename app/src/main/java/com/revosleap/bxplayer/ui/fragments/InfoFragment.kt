@@ -125,7 +125,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
     }
 
     private fun updatePlayingStatus() {
-        val drawable = if (mPlayerAdapter!!.state != PlaybackInfoListener.State.PAUSED)
+        val drawable = if (mPlayerAdapter!!.getState() != PlaybackInfoListener.State.PAUSED)
             R.drawable.pause
         else
             R.drawable.play_icon
@@ -141,18 +141,18 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
 
         if (startPlay) {
-            mPlayerAdapter!!.mediaPlayer.start()
+            mPlayerAdapter!!.getMediaPlayer()?.start()
             Handler().postDelayed({
                 mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
                         mMusicNotificationManager!!.createNotification())
             }, 250)
         }
 
-        val selectedSong = mPlayerAdapter!!.currentSong
+        val selectedSong = mPlayerAdapter!!.getCurrentSong()
 
-        mSelectedArtist = selectedSong.artist
-        val duration = selectedSong.duration
-        seekBarInfo?.max = duration
+        mSelectedArtist = selectedSong?.artist
+        val duration = selectedSong?.duration
+        seekBarInfo?.max = duration!!
         textViewDuration?.text = AudioUtils.formatDuration(duration)
 
         textViewInfoTitle?.post(Runnable { textViewInfoTitle.setText(selectedSong.title) })
@@ -160,7 +160,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
         textViewInfoArtist?.setText(selectedSong.artist)
 
         if (restore) {
-            seekBarInfo?.setProgress(mPlayerAdapter!!.playerPosition)
+            seekBarInfo?.setProgress(mPlayerAdapter!!.getPlayerPosition())
             updatePlayingStatus()
             // updateResetStatus(false);
 
@@ -217,7 +217,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
         override fun onStateChanged(@State state: Int) {
 
             updatePlayingStatus()
-            if (mPlayerAdapter!!.state != PlaybackInfoListener.State.RESUMED && mPlayerAdapter!!.state != PlaybackInfoListener.State.PAUSED) {
+            if (mPlayerAdapter!!.getState() != PlaybackInfoListener.State.RESUMED && mPlayerAdapter!!.getState() != PlaybackInfoListener.State.PAUSED) {
                 updatePlayingInfo(false, true)
             }
         }
@@ -229,7 +229,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
     private fun checkIsPlayer(): Boolean {
 
-        val isPlayer = mPlayerAdapter!!.isMediaPlayer
+        val isPlayer = mPlayerAdapter!!.isMediaPlayer()
         if (!isPlayer) {
             EqualizerUtils.notifyNoSessionId(activity!!)
         }

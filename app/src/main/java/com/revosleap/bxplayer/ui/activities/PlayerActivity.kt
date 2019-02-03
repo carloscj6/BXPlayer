@@ -205,7 +205,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
 
 
     private fun updatePlayingStatus() {
-        val drawable = if (mPlayerAdapter!!.state != PlaybackInfoListener.State.PAUSED)
+        val drawable = if (mPlayerAdapter!!.getState() != PlaybackInfoListener.State.PAUSED)
             R.drawable.pause
         else
             R.drawable.play_icon
@@ -216,7 +216,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
         Handler().postDelayed({
             if (mIsBound) {
                 if (mPlayerAdapter != null) {
-                    val selectedSong = mPlayerAdapter!!.currentSong
+                    val selectedSong = mPlayerAdapter!!.getCurrentSong()
 
                     if (selectedSong != null) {
                         textViewTitle!!.text = selectedSong.title
@@ -233,18 +233,18 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
     private fun updatePlayingInfo(restore: Boolean, startPlay: Boolean) {
 
         if (startPlay) {
-            mPlayerAdapter!!.mediaPlayer.start()
+            mPlayerAdapter!!.getMediaPlayer()?.start()
             Handler().postDelayed({
                 mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
                         mMusicNotificationManager!!.createNotification())
             }, 250)
         }
 
-        val selectedSong = mPlayerAdapter!!.currentSong
+        val selectedSong = mPlayerAdapter!!.getCurrentSong()
 
-        textViewTitle!!.post { textViewTitle!!.text = selectedSong.title }
+        textViewTitle!!.post { textViewTitle!!.text = selectedSong?.title }
 
-        textViewArtName!!.text = selectedSong.artist
+        textViewArtName!!.text = selectedSong?.artist
 
         if (restore) {
             updatePlayingStatus()
@@ -265,7 +265,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun checkIsPlayer(): Boolean {
 
-        val isPlayer = mPlayerAdapter!!.isMediaPlayer
+        val isPlayer = mPlayerAdapter!!.isMediaPlayer()
         if (!isPlayer) {
             EqualizerUtils.notifyNoSessionId(this)
         }
@@ -313,7 +313,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
 
         //if we are playing and the activity was restarted
         //update the controls panel
-        if (mPlayerAdapter != null && mPlayerAdapter!!.isMediaPlayer) {
+        if (mPlayerAdapter != null && mPlayerAdapter!!.isMediaPlayer()) {
 
             mPlayerAdapter!!.onResumeActivity()
             updatePlayingInfo(true, false)
@@ -331,7 +331,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
         override fun onStateChanged(@State state: Int) {
 
             updatePlayingStatus()
-            if (mPlayerAdapter!!.state != PlaybackInfoListener.State.RESUMED && mPlayerAdapter!!.state != PlaybackInfoListener.State.PAUSED) {
+            if (mPlayerAdapter!!.getState() != PlaybackInfoListener.State.RESUMED && mPlayerAdapter!!.getState() != PlaybackInfoListener.State.PAUSED) {
                 updatePlayingInfo(false, true)
             }
         }

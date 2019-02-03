@@ -55,7 +55,7 @@ class BXNotificationManager internal constructor(private val musicPlayerService:
             PREV_ACTION -> icon = R.drawable.previous
             PLAY_PAUSE_ACTION ->
 
-                icon = if (musicPlayerService.mediaPlayerHolder?.state != PlaybackInfoListener.State.PAUSED)
+                icon = if (musicPlayerService.mediaPlayerHolder?.getState() != PlaybackInfoListener.State.PAUSED)
                     R.drawable.pause
                 else
                     R.drawable.play_icon
@@ -67,7 +67,7 @@ class BXNotificationManager internal constructor(private val musicPlayerService:
 
     fun createNotification(): Notification {
 
-        val song = musicPlayerService.mediaPlayerHolder?.currentSong
+        val song = musicPlayerService.mediaPlayerHolder?.getCurrentSong()
 
         notificationBuilder = NotificationCompat.Builder(musicPlayerService, channelId)
 
