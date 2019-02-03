@@ -130,7 +130,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
         else
             R.drawable.play_icon
         try {
-            buttonInfoPlay.post(Runnable { buttonInfoPlay.setBackgroundResource(drawable) })
+            buttonInfoPlay.post({ buttonInfoPlay.setBackgroundResource(drawable) })
         } catch (e: Exception) {
             e.printStackTrace()
         }

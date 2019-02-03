@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,7 +102,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         mPlayerAdapter!!.initMediaPlayer()
         mPlayerAdapter!!.getMediaPlayer()?.start()
         mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
-                    mMusicNotificationManager!!.createNotification())
+                mMusicNotificationManager!!.createNotification())
 
 
     }
@@ -136,9 +135,9 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         override fun onStateChanged(@State state: Int) {
             //
             //            updatePlayingStatus();
-            //            if (mPlayerAdapter.getState() != State.RESUMED && mPlayerAdapter.getState() != State.PAUSED) {
-            //                updatePlayingInfo(false, true);
-            //            }
+            if (mPlayerAdapter?.getState() != State.RESUMED && mPlayerAdapter?.getState() != State.PAUSED) {
+                updatePlayingInfo(false, true);
+            }
         }
 
         override fun onPlaybackCompleted() {
@@ -146,7 +145,29 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         }
     }
 
+    private fun updatePlayingInfo(restore: Boolean, startPlay: Boolean) {
+        if (startPlay) {
+            mPlayerAdapter!!.getMediaPlayer()?.start()
+            Handler().postDelayed({
+                mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
+                        mMusicNotificationManager!!.createNotification())
+            }, 250)
+        }
+        if (restore) {
+            Handler().postDelayed({
+                //stop foreground if coming from pause state
+                if (mMusicService!!.isRestoredFromPause) {
+                    mMusicService!!.stopForeground(false)
+                    mMusicService!!.musicNotificationManager?.notificationManager!!
+                            .notify(BXNotificationManager.NOTIFICATION_ID,
+                                    mMusicService!!.musicNotificationManager?.notificationBuilder?.build())
+                    mMusicService!!.isRestoredFromPause = false
+                }
+            }, 250)
+        }
+    }
+
     companion object {
-        val Broadcast_PLAY_NEW_AUDIO = "com.revosleap.bxplayer.PlayNewAudio"
+        const val Broadcast_PLAY_NEW_AUDIO = "com.revosleap.bxplayer.PlayNewAudio"
     }
 }

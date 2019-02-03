@@ -174,8 +174,8 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
         }
     }
 
-    override fun setPlaybackInfoListener(listener: PlaybackInfoListener) {
-        mPlaybackInfoListener = listener
+    override fun setPlaybackInfoListener(playbackInfoListener: PlaybackInfoListener) {
+        mPlaybackInfoListener = playbackInfoListener
     }
 
     private fun setStatus(@PlaybackInfoListener.State state: Int) {
