@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import com.revosleap.bxplayer.utils.adapters.ArtistAdapter
 import com.revosleap.bxplayer.utils.utils.GetAudio
 import com.revosleap.bxplayer.R
-import com.revosleap.bxplayer.utils.models.AudioModel
 import kotlinx.android.synthetic.main.fragment_artists.*
 
 

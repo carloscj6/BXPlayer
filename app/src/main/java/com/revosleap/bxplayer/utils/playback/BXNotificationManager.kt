@@ -18,7 +18,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 
-import com.revosleap.bxplayer.utils.models.AudioModel
+import com.revosleap.bxplayer.models.AudioModel
 import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.R

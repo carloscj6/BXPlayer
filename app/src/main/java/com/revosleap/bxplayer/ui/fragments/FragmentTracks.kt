@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.utils.adapters.TrackAdapter
-import com.revosleap.bxplayer.utils.models.AudioModel
+import com.revosleap.bxplayer.models.AudioModel
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
 import com.revosleap.bxplayer.utils.playback.PlayerAdapter

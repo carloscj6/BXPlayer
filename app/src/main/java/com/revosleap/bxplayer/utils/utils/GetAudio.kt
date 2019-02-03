@@ -4,7 +4,7 @@ import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import com.revosleap.bxplayer.utils.models.AudioModel
+import com.revosleap.bxplayer.models.AudioModel
 import java.util.*
 
 class GetAudio {

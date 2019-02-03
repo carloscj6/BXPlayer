@@ -4,8 +4,8 @@ import android.app.Activity
 import android.media.MediaPlayer
 
 
-import com.revosleap.bxplayer.utils.models.Album
-import com.revosleap.bxplayer.utils.models.AudioModel
+import com.revosleap.bxplayer.models.Album
+import com.revosleap.bxplayer.models.AudioModel
 
 
 interface PlayerAdapter {

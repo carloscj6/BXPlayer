@@ -1,4 +1,4 @@
-package com.revosleap.bxplayer.utils.models
+package com.revosleap.bxplayer.models
 
 import java.io.InputStream
 

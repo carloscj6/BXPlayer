@@ -2,19 +2,7 @@
     <string name="app_name">BX Player</string>
 
     <string name="action_settings">Settings</string>
-    <string name="albums">%s (albums: %d)</string>
-    <string name="unknown_year" translatable="false">N&#x2F;A</string>
-    <string name="no_eq">No equalizer found!</string>
     <string name="bad_id">Play a song first!</string>
-    <string name="artist_info">&lt;b>Albums:&lt;/b>&#160;%1d&#160;&lt;b>Songs:&lt;/b>&#160;%2d</string>
-    <string name="track_title" translatable="false">&lt;b>%1d&lt;/b>&#160;%2s</string>
-    <string name="playing_song" translatable="false">&lt;b>%1s&lt;/b>&lt;br/>%2s</string>
-    <string name="no_browser">No browser found!</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

@@ -15,9 +15,10 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import com.revosleap.bxplayer.services.MusicPlayerService
-import com.revosleap.bxplayer.utils.models.Album
-import com.revosleap.bxplayer.utils.models.AudioModel
-import com.revosleap.bxplayer.utils.player.EqualizerUtils
+import com.revosleap.bxplayer.models.Album
+import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.utils.utils.EqualizerUtils
+
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit

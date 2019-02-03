@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.revosleap.bxplayer.R
-import com.revosleap.bxplayer.utils.recyclerView.viewholders.TrackViewHolder
-import com.revosleap.bxplayer.utils.models.AudioModel
+import com.revosleap.bxplayer.ui.viewholders.TrackViewHolder
+import com.revosleap.bxplayer.models.AudioModel
 
 class ArtistAdapter(private var artistList: MutableList<AudioModel>, internal var context: Context) : RecyclerView.Adapter<TrackViewHolder>() {
 

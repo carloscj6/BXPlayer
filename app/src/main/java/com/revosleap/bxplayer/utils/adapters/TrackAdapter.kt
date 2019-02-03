@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.revosleap.bxplayer.R
-import com.revosleap.bxplayer.utils.models.AudioModel
+import com.revosleap.bxplayer.models.AudioModel
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 
