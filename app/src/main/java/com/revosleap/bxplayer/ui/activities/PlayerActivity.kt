@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -32,7 +31,6 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
         checkPermission()
         control()
         setViewPager()
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         buttonNext.setOnClickListener(this)
