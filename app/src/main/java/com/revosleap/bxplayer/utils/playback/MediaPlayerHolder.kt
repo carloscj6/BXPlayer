@@ -56,7 +56,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
                 // Lost audio focus, but will gain it back (shortly), so note whether
                 // playback should resume
                 mCurrentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
-                mPlayOnFocusGain = isMediaPlayer && mState == PlaybackInfoListener.State.PLAYING || mState == PlaybackInfoListener.State.RESUMED
+                mPlayOnFocusGain = isMediaPlayer() && mState == PlaybackInfoListener.State.PLAYING || mState == PlaybackInfoListener.State.RESUMED
             }
             AudioManager.AUDIOFOCUS_LOSS ->
                 // Lost audio focus, probably "permanently"
@@ -112,6 +112,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
             unregisterActionsReceiver()
         }
     }
+
 
     override fun getCurrentSong(): AudioModel? {
         return mSelectedSong

@@ -13,19 +13,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.revosleap.bxplayer.utils.playback.BXNotificationManager
-import com.revosleap.bxplayer.utils.playback.BxPlayerService
-import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
-import com.revosleap.bxplayer.utils.playback.PlayerAdapter
-import com.revosleap.bxplayer.utils.models.AudioModel
-import com.revosleap.bxplayer.utils.player.AudioPlayerService
-import com.revosleap.bxplayer.utils.adapters.TrackAdapter
-import com.revosleap.bxplayer.utils.utils.GetAudio
-import com.revosleap.bxplayer.utils.utils.StorageUtil
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.services.MusicPlayerService
+import com.revosleap.bxplayer.utils.adapters.TrackAdapter
+import com.revosleap.bxplayer.utils.models.AudioModel
+import com.revosleap.bxplayer.utils.playback.BXNotificationManager
+import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
+import com.revosleap.bxplayer.utils.playback.PlayerAdapter
+import com.revosleap.bxplayer.utils.utils.GetAudio
 import kotlinx.android.synthetic.main.fragment_tracks.*
-import java.util.*
 
 
 class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
@@ -54,8 +50,6 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
             mMusicService = null
         }
     }
-
-
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -104,45 +98,13 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         doUnbindService()
     }
 
-    private fun playAudio(audioIndex: Int) {
-        val arrayList: ArrayList<AudioModel>? = null
-        //Check is service is active
-        if (!serviceBound) {
-            //Store Serializable audioList to SharedPreferences
-            val storage = StorageUtil(activity!!)
-            storage.storeAudio(list)
-            storage.storeAudioIndex(audioIndex)
-
-            val playerIntent = Intent(activity, AudioPlayerService::class.java)
-            activity!!.startService(playerIntent)
-
-        } else {
-            //Store the new audioIndex to SharedPreferences
-            val storage = StorageUtil(activity!!)
-            storage.storeAudioIndex(audioIndex)
-
-            //Service is active
-            //Send a broadcast to the service -> PLAY_NEW_AUDIO
-            val broadcastIntent = Intent(Broadcast_PLAY_NEW_AUDIO)
-            activity!!.sendBroadcast(broadcastIntent)
-        }
-    }
-
-
     override fun onSongSelected(song: AudioModel, songs: List<AudioModel>) {
-        Log.v("song ", song.title + " number= " + songs.size)
-        try {
-            mPlayerAdapter!!.setCurrentSong(song, songs)
-            mPlayerAdapter!!.initMediaPlayer()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
+        mPlayerAdapter!!.setCurrentSong(song, songs)
+        mPlayerAdapter!!.initMediaPlayer()
         mPlayerAdapter!!.mediaPlayer.start()
-        Handler().postDelayed({
-            mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
+        mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
                     mMusicNotificationManager!!.createNotification())
-        }, 250)
+
 
     }
 
