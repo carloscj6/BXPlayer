@@ -4,7 +4,7 @@ import java.util.ArrayList
 
 class Album {
 
-    val songs: List<AudioModel>
+    private val songs: List<AudioModel>
 
     val title: String?
         get() = firstSong?.album

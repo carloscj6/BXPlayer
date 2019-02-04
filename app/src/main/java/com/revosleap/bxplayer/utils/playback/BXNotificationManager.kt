@@ -51,16 +51,16 @@ class BXNotificationManager internal constructor(private val musicPlayerService:
 
         val icon: Int
 
-        when (action) {
-            PREV_ACTION -> icon = R.drawable.previous
+        icon = when (action) {
+            PREV_ACTION -> R.drawable.previous
             PLAY_PAUSE_ACTION ->
 
-                icon = if (musicPlayerService.mediaPlayerHolder?.getState() != PlaybackInfoListener.State.PAUSED)
+                if (musicPlayerService.mediaPlayerHolder?.getState() != PlaybackInfoListener.State.PAUSED)
                     R.drawable.pause
                 else
                     R.drawable.play_icon
-            NEXT_ACTION -> icon = R.drawable.next
-            else -> icon = R.drawable.previous
+            NEXT_ACTION -> R.drawable.next
+            else -> R.drawable.previous
         }
         return NotificationCompat.Action.Builder(icon, action, playerAction(action)).build()
     }
@@ -173,7 +173,7 @@ class BXNotificationManager internal constructor(private val musicPlayerService:
 
     companion object {
         const val NOTIFICATION_ID = 101
-        const internal val PLAY_PAUSE_ACTION = "com.revosleap.bxplayer.PLAYPAUSE"
+        internal const val PLAY_PAUSE_ACTION = "com.revosleap.bxplayer.PLAYPAUSE"
         const internal val NEXT_ACTION = "com.revosleap.bxplayer.NEXT"
         const internal val PREV_ACTION = "com.revosleap.bxplayer.PREV"
     }

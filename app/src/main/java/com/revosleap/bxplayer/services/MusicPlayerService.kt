@@ -8,7 +8,7 @@ import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.MediaPlayerHolder
 
 class MusicPlayerService : Service() {
-    val binder= MusicBinder()
+    private val binder= MusicBinder()
     var mediaPlayerHolder: MediaPlayerHolder? = null
         private set
     var musicNotificationManager: BXNotificationManager? = null

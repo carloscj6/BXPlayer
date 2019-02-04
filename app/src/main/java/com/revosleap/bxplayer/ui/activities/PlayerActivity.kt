@@ -1,9 +1,14 @@
 package com.revosleap.bxplayer.ui.activities
 
 import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -13,6 +18,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.fragments.InfoFragment
 import com.revosleap.bxplayer.utils.adapters.TabFragmentAdapter
 import kotlinx.android.synthetic.main.activity_player.*
@@ -22,12 +28,25 @@ import kotlinx.android.synthetic.main.tabs_main.*
 
 class PlayerActivity : AppCompatActivity(), View.OnClickListener {
     private var mSectionsPagerAdapter: TabFragmentAdapter? = null
+    private var mMusicService: MusicPlayerService? = null
+    private var isServiceBound= false
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            mMusicService = (service as MusicPlayerService.MusicBinder).serviceInstance
+
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            mMusicService = null
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
+        doBindService()
         checkPermission()
         control()
         setViewPager()
@@ -40,6 +59,21 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        doUnbindService()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        doBindService()
+    }
+    fun getPlayerService(): MusicPlayerService? {
+        return if (mMusicService!=null){
+            mMusicService!!
+        }else null
+
+    }
     private fun setViewPager() {
         tabsMain.apply {
             addTab(this.newTab().setText("Favorites"))
@@ -135,5 +169,17 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
+    private fun doBindService() {
+        bindService(Intent(this@PlayerActivity,
+                MusicPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+        isServiceBound = true
+        val startNotStickyIntent = Intent(this@PlayerActivity, MusicPlayerService::class.java)
+        startService(startNotStickyIntent)
+    }
+    private fun doUnbindService() {
+        if (isServiceBound) {
+            unbindService(serviceConnection)
+            isServiceBound = false
+        }
+    }
 }

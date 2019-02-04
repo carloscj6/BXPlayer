@@ -4,12 +4,9 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
 import android.widget.Toast
-
 import com.revosleap.bxplayer.R
 
 object EqualizerUtils {

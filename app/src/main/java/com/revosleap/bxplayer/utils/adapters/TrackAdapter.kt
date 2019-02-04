@@ -49,12 +49,11 @@ class TrackAdapter(internal var tracklist: MutableList<AudioModel>, private val 
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        var trackImage: ImageView
+        var trackImage: ImageView = itemView.findViewById(R.id.imageView2)
         var title: TextView
         var artist: TextView
 
         init {
-            trackImage = itemView.findViewById(R.id.imageView2)
             title = itemView.findViewById(R.id.textViewTitleTrack)
             artist = itemView.findViewById(R.id.textViewArtistTrack)
             itemView.setOnClickListener(this)

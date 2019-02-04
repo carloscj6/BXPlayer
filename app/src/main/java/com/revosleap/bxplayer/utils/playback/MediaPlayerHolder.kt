@@ -484,14 +484,14 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
         // The volume we set the media player to when we lose audio focus, but are
         // allowed to reduce the volume instead of stopping playback.
-        private val VOLUME_DUCK = 0.2f
+        private const val VOLUME_DUCK = 0.2f
         // The volume we set the media player when we have audio focus.
-        private val VOLUME_NORMAL = 1.0f
+        private const val VOLUME_NORMAL = 1.0f
         // we don't have audio focus, and can't duck (play at a low volume)
-        private val AUDIO_NO_FOCUS_NO_DUCK = 0
+        private const val AUDIO_NO_FOCUS_NO_DUCK = 0
         // we don't have focus, but can duck (play at a low volume)
-        private val AUDIO_NO_FOCUS_CAN_DUCK = 1
-        private val AUDIO_FOCUSED = 2
+        private const val AUDIO_NO_FOCUS_CAN_DUCK = 1
+        private const val AUDIO_FOCUSED = 2
     }
 
 }

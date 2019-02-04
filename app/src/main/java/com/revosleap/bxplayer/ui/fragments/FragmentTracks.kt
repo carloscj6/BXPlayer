@@ -85,11 +85,6 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         outState.putBoolean("serviceStatus", serviceBound)
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        //        serviceBound=savedInstanceState.getBoolean("serviceStatus");
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         super.onDestroy()
@@ -136,7 +131,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
             //
             //            updatePlayingStatus();
             if (mPlayerAdapter?.getState() != State.RESUMED && mPlayerAdapter?.getState() != State.PAUSED) {
-                updatePlayingInfo(false, true);
+                updatePlayingInfo(false, startPlay = true)
             }
         }
 
