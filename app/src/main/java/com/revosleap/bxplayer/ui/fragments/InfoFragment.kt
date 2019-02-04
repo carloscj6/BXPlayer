@@ -123,7 +123,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
         val duration = selectedSong?.duration
         seekBarInfo?.max = duration!!
         textViewDuration?.text = AudioUtils.formatDuration(duration)
-        textViewInfoTitle.text = selectedSong.title
+        textViewInfoTitle?.text = selectedSong.title
         textViewInfoArtist?.text = selectedSong.artist
 
         if (restore) {
