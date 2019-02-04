@@ -16,7 +16,7 @@ class MusicPlayerService : Service() {
     var isRestoredFromPause = false
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        mediaPlayerHolder!!.registerNoisyReceiver()
+        mediaPlayerHolder?.registerNoisyReceiver()
         return START_NOT_STICKY
     }
 

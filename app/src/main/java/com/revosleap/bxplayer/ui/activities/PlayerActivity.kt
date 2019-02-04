@@ -11,28 +11,40 @@ import android.os.Bundle
 import android.os.IBinder
 import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.LoaderManager
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.Loader
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.models.Artist
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.fragments.InfoFragment
 import com.revosleap.bxplayer.utils.adapters.TabFragmentAdapter
+import com.revosleap.bxplayer.utils.playback.PlayerAdapter
+import com.revosleap.bxplayer.utils.utils.ArtistProvider
+import com.revosleap.bxplayer.utils.utils.EqualizerUtils
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.controls.*
 import kotlinx.android.synthetic.main.tabs_main.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.warn
 
 
-class PlayerActivity : AppCompatActivity(), View.OnClickListener {
+class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
+
+    private var mPlayerAdapter: PlayerAdapter? = null
     private var mSectionsPagerAdapter: TabFragmentAdapter? = null
     private var mMusicService: MusicPlayerService? = null
-    private var isServiceBound= false
+    private var isServiceBound = false
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             mMusicService = (service as MusicPlayerService.MusicBinder).serviceInstance
+            mPlayerAdapter = mMusicService!!.mediaPlayerHolder
 
         }
 
@@ -68,12 +80,14 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
         super.onResume()
         doBindService()
     }
+
     fun getPlayerService(): MusicPlayerService? {
-        return if (mMusicService!=null){
+        return if (mMusicService != null) {
             mMusicService!!
-        }else null
+        } else null
 
     }
+
     private fun setViewPager() {
         tabsMain.apply {
             addTab(this.newTab().setText("Favorites"))
@@ -120,13 +134,9 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
-
-
         return if (id == R.id.action_settings) {
+            openEqualizer()
             true
         } else super.onOptionsItemSelected(item)
 
@@ -176,10 +186,31 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener {
         val startNotStickyIntent = Intent(this@PlayerActivity, MusicPlayerService::class.java)
         startService(startNotStickyIntent)
     }
+
     private fun doUnbindService() {
         if (isServiceBound) {
             unbindService(serviceConnection)
             isServiceBound = false
         }
+    }
+
+    private fun openEqualizer() {
+        if (EqualizerUtils.hasEqualizer(this@PlayerActivity)) {
+            if (checkIsPlayer()) {
+                mPlayerAdapter?.openEqualizer(this@PlayerActivity)
+            }
+        } else {
+            toast("Equalizer not Found!!")
+
+        }
+    }
+
+    private fun checkIsPlayer(): Boolean {
+
+        val isPlayer = mPlayerAdapter?.isMediaPlayer()
+        if (!isPlayer!!) {
+            EqualizerUtils.notifyNoSessionId(this@PlayerActivity)
+        }
+        return isPlayer
     }
 }

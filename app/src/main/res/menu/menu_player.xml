@@ -1,10 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.revosleap.bxplayer.ui.fragments.activities.PlayerActivity">
+    tools:context="com.revosleap.bxplayer.ui.activities.PlayerActivity">
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:orderInCategory="0"
+        android:title="@string/equalizer"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_sound_bars"/>
 </menu>

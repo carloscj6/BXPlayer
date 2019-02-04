@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.fragment_tracks.*
 
 class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
 
-
     private var serviceBound = false
     private var list = mutableListOf<AudioModel>()
     private var mMusicService: MusicPlayerService? = null
@@ -50,6 +49,10 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         }
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        doBindService()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -75,10 +78,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         }
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        doBindService()
-    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -162,7 +162,4 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         }
     }
 
-    companion object {
-        const val Broadcast_PLAY_NEW_AUDIO = "com.revosleap.bxplayer.PlayNewAudio"
-    }
 }

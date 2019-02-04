@@ -1,31 +1,24 @@
 package com.revosleap.bxplayer.models
 
-import java.util.ArrayList
-
 class Album {
+    val songs: MutableList<Song> = mutableListOf()
 
-    private val songs: List<AudioModel>
-
-    val title: String?
-        get() = firstSong?.album
+    val title: String
+        get() = firstSong.albumName!!
 
     val artistId: Int
-        get() = firstSong?.artistId!!
+        get() = firstSong.artistId
 
     val artistName: String?
-        get() = firstSong?.artist
+        get() = firstSong.artistName
 
     val year: Int
-        get() = firstSong?.songYear!!
+        get() = firstSong.year
 
     val songCount: Int
         get() = songs.size
 
-    private// return songs.isEmpty() ? AudioModel.EMPTY_SONG : songs.get(0);
-    val firstSong: AudioModel?
-        get() = null
+    private val firstSong: Song
+        get() = if (songs.isEmpty()) Song.EMPTY_SONG else songs[0]
 
-    init {
-        this.songs = ArrayList()
-    }
 }

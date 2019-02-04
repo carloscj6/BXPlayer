@@ -1,9 +1,8 @@
 package com.revosleap.bxplayer.utils.playback
 
+
 import android.app.Activity
 import android.media.MediaPlayer
-
-
 import com.revosleap.bxplayer.models.Album
 import com.revosleap.bxplayer.models.AudioModel
 

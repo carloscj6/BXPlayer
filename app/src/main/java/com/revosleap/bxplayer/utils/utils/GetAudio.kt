@@ -5,6 +5,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import com.revosleap.bxplayer.models.AudioModel
+import org.jetbrains.anko.toast
 import java.util.*
 
 class GetAudio {
@@ -17,7 +18,6 @@ class GetAudio {
         val projection = arrayOf(MediaStore.Audio.AudioColumns.DATA, MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.ArtistColumns.ARTIST, MediaStore.Audio.AudioColumns.TITLE, MediaStore.Audio.AudioColumns.DURATION)
         val cursor = context.contentResolver.query(uri, projection, null, null, order)
         if (cursor != null) {
-            Log.v("Count", "Songs " + cursor.count)
             while (cursor.moveToNext()) {
 
                 val model = AudioModel()
@@ -29,7 +29,6 @@ class GetAudio {
 
                 try {
                     model.title = name
-
                     model.album = album
                     model.artist = artist
                     model.path = path
@@ -45,7 +44,7 @@ class GetAudio {
             }
             cursor.close()
         } else
-            Toast.makeText(context, "Null", Toast.LENGTH_SHORT).show()
+            context.toast("No Audio Files Found")
         return temAudioList
 
     }
