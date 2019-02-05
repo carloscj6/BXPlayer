@@ -2,6 +2,8 @@ package com.revosleap.bxplayer.ui.fragments
 
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -20,6 +22,8 @@ import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
 import kotlinx.android.synthetic.main.info.*
 import org.jetbrains.anko.startService
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 
 
 class InfoFragment : Fragment(), View.OnClickListener {
@@ -100,7 +104,8 @@ class InfoFragment : Fragment(), View.OnClickListener {
         else
             R.drawable.play_icon
         try {
-            buttonInfoPlay.post { buttonInfoPlay.setBackgroundResource(drawable) }
+            buttonInfoPlay.setImageDrawable(activity?.getDrawable(drawable))
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -125,6 +130,16 @@ class InfoFragment : Fragment(), View.OnClickListener {
         textViewDuration?.text = AudioUtils.formatDuration(duration)
         textViewInfoTitle?.text = selectedSong.title
         textViewInfoArtist?.text = selectedSong.artist
+        val retriever = MediaMetadataRetriever()
+        val inputStream: InputStream?
+        retriever.setDataSource(selectedSong?.path)
+        if (retriever.embeddedPicture != null) {
+            inputStream = ByteArrayInputStream(retriever.embeddedPicture)
+            imageViewInfo.setImageBitmap(BitmapFactory.decodeStream(inputStream))
+
+//            Glide.with(holder.itemView.context).load(inputStream)
+//                    .into(holder.trackImage)
+        }
 
 
         if (restore) {

@@ -1,41 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-   >
+    >
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageViewInfo"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView5"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:contentDescription="@string/app_name"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="5dp"
             app:layout_constraintBottom_toTopOf="@+id/textViewInfoTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread_inside"
-            app:srcCompat="@drawable/cover2" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageViewInfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/cover2" />
+        </android.support.v7.widget.CardView>
+
 
         <TextView
             android:id="@+id/textViewInfoTitle"
@@ -45,61 +52,65 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/roboto_light"
-            android:text="Viper"
+            android:singleLine="true"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/textViewInfoArtist"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:ellipsize="marquee"
-            android:singleLine="true"
-            tools:text="My love, Glen wasington" />
+            tools:text="My love, Glen washington" />
 
         <TextView
-            android:fontFamily="@font/roboto_light"
             android:id="@+id/textViewInfoArtist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="Glen Washington"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto_light"
             android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/buttonInfoFave"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonInfoPlaylist"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/playlist"
-            android:backgroundTint="@color/colorAccentLight"
+            android:layout_marginBottom="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/playlist"
+            android:tint="@color/colorAccentLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonInfoFave"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/favorite_border"
-            android:backgroundTint="@color/colorAccentLight"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/favorite_border"
+            android:tint="@color/colorAccentLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonInfoVol"
             app:layout_constraintStart_toEndOf="@+id/buttonInfoPlaylist" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonInfoVol"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/volume_available"
-            android:backgroundTint="@color/colorAccentLight"
+            android:layout_marginBottom="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/volume_available"
+            android:tint="@color/colorAccentLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </android.support.constraint.ConstraintLayout>
@@ -108,10 +119,10 @@
         android:id="@+id/constraintLayout3"
         android:layout_width="0dp"
         android:layout_height="118dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,79 +142,87 @@
             tools:progressBackgroundTint="@color/colorAccentLight" />
 
         <TextView
-            android:fontFamily="@font/roboto_light"
             android:id="@+id/textViewProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="0:00"
+            android:fontFamily="@font/roboto_light"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/seekBarInfo" />
 
         <TextView
-            android:fontFamily="@font/roboto_light"
             android:id="@+id/textViewDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:text="3:42"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/roboto_light"
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/seekBarInfo" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonInfoShuffle"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/shuffle"
-            android:backgroundTint="@color/colorAccentLight"
-            app:layout_constraintEnd_toStartOf="@id/buttonInfoPrev"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/shuffle"
+            android:tint="@color/colorAccentLight"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonInfoPrev"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonInfoPrev"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/previous"
-            android:backgroundTint="@color/colorAccentLight"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/previous"
+            android:tint="@color/colorAccentLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonInfoPlay"
             app:layout_constraintStart_toEndOf="@id/buttonInfoShuffle" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonInfoPlay"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/play_icon"
-            android:backgroundTint="@color/colorAccentLight"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/play_icon"
+            android:tint="@color/colorAccentLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonInfoNext"
             app:layout_constraintStart_toEndOf="@+id/buttonInfoPrev" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonInfoNext"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/next"
-            android:backgroundTint="@color/colorAccentLight"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/next"
+            android:tint="@color/colorAccentLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonInfoAll"
             app:layout_constraintStart_toEndOf="@+id/buttonInfoPlay" />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonInfoAll"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/repeat"
-            android:backgroundTint="@color/colorAccentLight"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/repeat"
+            android:tint="@color/colorAccentLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/buttonInfoNext" />
