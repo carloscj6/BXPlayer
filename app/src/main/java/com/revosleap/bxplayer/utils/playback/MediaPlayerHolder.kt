@@ -14,10 +14,12 @@ import android.os.PowerManager
 import android.support.v4.media.session.MediaSessionCompat
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
+import com.google.gson.Gson
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.models.Album
 import com.revosleap.bxplayer.models.AudioModel
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
+import com.revosleap.bxplayer.utils.utils.PreferenceHelper
 
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -47,6 +49,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     private var mPlayOnFocusGain: Boolean = false
     private var phoneStateListener: PhoneStateListener? = null
     private var telephonyManager: TelephonyManager? = null
+    private val preferenceHelper= PreferenceHelper(mContext)
     private val mOnAudioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
         when (focusChange) {
             AudioManager.AUDIOFOCUS_GAIN -> mCurrentAudioFocusState = AUDIO_FOCUSED
@@ -116,6 +119,8 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
 
     override fun getCurrentSong(): AudioModel? {
+        val index = mSongs?.indexOf(mSelectedSong)
+        preferenceHelper.currentIndex =index!!
         return mSelectedSong
     }
 
@@ -127,11 +132,18 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
         mSelectedAlbum = album
     }
 
-    override fun setCurrentSong(song: AudioModel, songs: List<AudioModel>) {
+    override fun setCurrentSong(song: AudioModel, songs: MutableList<AudioModel>) {
         mSelectedSong = song
         mSongs = songs
+        if (songs.size>0){
+         saveSongs(songs)
+        }
     }
-
+    private fun saveSongs(songs: MutableList<AudioModel>){
+        val gson = Gson()
+        val gsonString = gson.toJson(songs)
+        preferenceHelper.playingList = gsonString
+    }
     override fun onCompletion(mediaPlayer: MediaPlayer) {
         if (mPlaybackInfoListener != null) {
             mPlaybackInfoListener!!.onStateChanged(PlaybackInfoListener.State.COMPLETED)

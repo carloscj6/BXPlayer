@@ -6,22 +6,26 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.LoaderManager
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.Loader
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.graphics.Palette
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.revosleap.bxplayer.R
-import com.revosleap.bxplayer.models.Artist
 import com.revosleap.bxplayer.models.AudioModel
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.fragments.InfoFragment
@@ -29,9 +33,8 @@ import com.revosleap.bxplayer.utils.adapters.TabFragmentAdapter
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
 import com.revosleap.bxplayer.utils.playback.PlayerAdapter
-import com.revosleap.bxplayer.utils.utils.ArtistProvider
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
-import com.revosleap.bxplayer.utils.utils.Universal
+import com.revosleap.bxplayer.utils.utils.PreferenceHelper
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.controls.*
 import kotlinx.android.synthetic.main.tabs_main.*
@@ -39,16 +42,23 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.startService
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.warn
+import java.io.ByteArrayInputStream
+import java.io.InputStream
+import java.lang.reflect.Type
 
 
 class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
-
+    private var preferenceHelper: PreferenceHelper? = null
     private var mPlayerAdapter: PlayerAdapter? = null
     private var mSectionsPagerAdapter: TabFragmentAdapter? = null
     private var mMusicService: MusicPlayerService? = null
     private var mPlaybackListener: PlaybackListener? = null
     private var mMusicNotificationManager: BXNotificationManager? = null
+    private var currentSongs = mutableListOf<AudioModel>()
+    private var currentPosition = 0
+    private var isPlayingNew = false
     private var isServiceBound = false
+    var color: Int = 0
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             mMusicService = (service as MusicPlayerService.MusicBinder).serviceInstance
@@ -79,12 +89,18 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         buttonNext.setOnClickListener(this)
         buttonPlay.setOnClickListener(this)
         buttonPrev.setOnClickListener(this)
-
+        preferenceHelper = PreferenceHelper(this@PlayerActivity)
+        getCurrentList()
 
     }
 
     override fun onStart() {
         super.onStart()
+        if (mPlaybackListener == null) {
+            mPlaybackListener = PlaybackListener()
+            mPlayerAdapter?.setPlaybackInfoListener(mPlaybackListener!!)
+            //     mPlaybackListener?.onStateChanged(PlaybackInfoListener.State.PLAYING)
+        }
 
     }
 
@@ -96,11 +112,13 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     override fun onResume() {
         super.onResume()
         doBindService()
-        startService<MusicPlayerService>()
-        mPlayerAdapter?.getMediaPlayer()?.start()
-        mMusicService?.startForeground(BXNotificationManager.NOTIFICATION_ID,
-                mMusicNotificationManager?.createNotification())
-
+//        mPlayerAdapter?.getMediaPlayer()?.start()
+//        mMusicService?.startForeground(BXNotificationManager.NOTIFICATION_ID,
+//                mMusicNotificationManager?.createNotification())
+        if (mMusicService != null) {
+            toast("found")
+            //     mPlaybackListener?.onStateChanged(PlaybackInfoListener.State.PLAYING)
+        }
 
     }
 
@@ -134,6 +152,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
             getInfoFragment()
         }
     }
+
     private fun getInfoFragment() {
         val fragment = InfoFragment()
         val fragmentTag = fragment.tag
@@ -192,14 +211,60 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.buttonPrev -> { skipPrev()
+            R.id.buttonPrev -> {
+                skipPrev()
             }
-            R.id.buttonPlay -> { resumeOrPause()
+            R.id.buttonPlay -> {
+                if (!isPlayingNew){
+                    onSongSelected(currentSongs[currentPosition], currentSongs)
+                    isPlayingNew=true
+                }else{
+                    resumeOrPause()
+                }
             }
-            R.id.buttonNext -> { skipNext()
+            R.id.buttonNext -> {
+                skipNext()
             }
         }
     }
+
+    private fun getCurrentList() {
+        val gson = Gson()
+        val jsonText = preferenceHelper?.playingList
+        val type: Type = object : TypeToken<MutableList<AudioModel>>() {}.type
+        val songs = gson.fromJson<MutableList<AudioModel>>(jsonText, type)
+        warn(songs.size)
+        currentSongs = songs
+        val position = preferenceHelper?.currentIndex
+        currentPosition = position!!
+        if (currentSongs.size > 0) {
+            val song = currentSongs[position!!]
+            textViewArtName?.text = song.artist
+            textViewTitle.text = song.title
+            val retriever = MediaMetadataRetriever()
+            val inputStream: InputStream?
+            retriever.setDataSource(song.path)
+            var image = BitmapFactory.decodeResource(resources, R.drawable.cover2)
+            if (retriever.embeddedPicture != null) {
+                inputStream = ByteArrayInputStream(retriever.embeddedPicture)
+                image = BitmapFactory.decodeStream(inputStream)
+                imageViewInfo.setImageBitmap(image)
+                blurryLayout.setBitmapBlurry(image, 20, 10)
+            }
+            getBxColor(image)
+        }
+    }
+
+    private fun onSongSelected(song: AudioModel, songs: MutableList<AudioModel>) {
+        mPlayerAdapter!!.setCurrentSong(song, songs)
+        mPlayerAdapter!!.initMediaPlayer()
+        mPlayerAdapter!!.getMediaPlayer()?.start()
+        mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
+                mMusicNotificationManager!!.createNotification())
+
+
+    }
+
     private fun skipPrev() {
         if (checkIsPlayer()) {
             mPlayerAdapter?.instantReset()
@@ -218,11 +283,13 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
             mPlayerAdapter!!.skip(true)
         }
     }
+
     private fun doBindService() {
+        startService<MusicPlayerService>()
         bindService(Intent(this@PlayerActivity,
                 MusicPlayerService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         isServiceBound = true
-        startService<MusicPlayerService>()
+
     }
 
     private fun doUnbindService() {
@@ -251,27 +318,52 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         }
         return isPlayer
     }
-    fun updateInformation(song:AudioModel){
+
+    fun updateInformation(song: AudioModel) {
         textViewArtName?.text = song.artist
         textViewTitle.text = song.title
     }
+
     private fun updatePlayingInfo(restore: Boolean, startPlay: Boolean) {
         if (startPlay) {
-            mPlayerAdapter!!.getMediaPlayer()?.start()
+            mPlayerAdapter?.getMediaPlayer()?.start()
             Handler().postDelayed({
-                mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
+                mMusicService?.startForeground(BXNotificationManager.NOTIFICATION_ID,
                         mMusicNotificationManager!!.createNotification())
             }, 250)
         }
 
-        val selectedSong = mPlayerAdapter?.getCurrentSong()
-        textViewArtName?.text= selectedSong?.artist
-        textViewTitle?.text= selectedSong?.title
-        toast(selectedSong?.title!!)
+        try {
+            val selectedSong = mPlayerAdapter?.getCurrentSong()
+            textViewArtName?.text = selectedSong?.artist
+            textViewTitle?.text = selectedSong?.title
+            toast(selectedSong?.title!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         if (restore) {
             updatePlayingStatus()
         }
     }
+
+    private fun getBxColor(bitmap: Bitmap){
+        color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            resources.getColor(R.color.colorAccent, null)
+        } else resources.getColor(R.color.colorAccent)
+        Palette.from(bitmap).generate { palette ->
+            val vibrant = palette?.dominantSwatch
+            try {
+                color = vibrant?.rgb!!
+                setViewColors(color)
+                tabsMain.tabRippleColor= ColorStateList.valueOf(color)
+                tabsMain.setSelectedTabIndicatorColor(color)
+            } catch (e: Exception) {
+            }
+        }
+
+
+    }
+
     private fun updatePlayingStatus() {
         val drawable = if (mPlayerAdapter?.getState() != PlaybackInfoListener.State.PAUSED)
             R.drawable.pause
@@ -285,6 +377,13 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         }
 
     }
+
+    fun setViewColors(color:Int) {
+        buttonPlay.setColorFilter(color)
+        buttonNext.setColorFilter(color)
+        buttonPrev.setColorFilter(color)
+    }
+
     internal inner class PlaybackListener : PlaybackInfoListener() {
 
         override fun onPositionChanged(position: Int) {

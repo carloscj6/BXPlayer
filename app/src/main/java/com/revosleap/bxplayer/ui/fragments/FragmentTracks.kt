@@ -103,7 +103,7 @@ class FragmentTracks : Fragment(), SimpleCallbacks {
         doUnbindService()
     }
 
-    private fun onSongSelected(song: AudioModel, songs: List<AudioModel>) {
+    private fun onSongSelected(song: AudioModel, songs:MutableList<AudioModel>) {
         mPlayerAdapter!!.setCurrentSong(song, songs)
         mPlayerAdapter!!.initMediaPlayer()
         mPlayerAdapter!!.getMediaPlayer()?.start()

@@ -135,7 +135,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
         retriever.setDataSource(selectedSong?.path)
         if (retriever.embeddedPicture != null) {
             inputStream = ByteArrayInputStream(retriever.embeddedPicture)
-            imageViewInfo.setImageBitmap(BitmapFactory.decodeStream(inputStream))
+            imageViewInfo?.setImageBitmap(BitmapFactory.decodeStream(inputStream))
 
 //            Glide.with(holder.itemView.context).load(inputStream)
 //                    .into(holder.trackImage)
