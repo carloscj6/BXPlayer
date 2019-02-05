@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/item_name"
+    android:title="@string/name"
+    android:orderInCategory="0"
+    />
+    <item android:orderInCategory="1"
+        android:id="@+id/item_songs"
+        android:title="@string/songs"
+        />
+</menu>

@@ -32,7 +32,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-    getService()
+        getService()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -119,13 +119,13 @@ class InfoFragment : Fragment(), View.OnClickListener {
         }
 
         val selectedSong = mPlayerAdapter?.getCurrentSong()
-
         mSelectedArtist = selectedSong?.artist
         val duration = selectedSong?.duration
         seekBarInfo?.max = duration!!
         textViewDuration?.text = AudioUtils.formatDuration(duration)
         textViewInfoTitle?.text = selectedSong.title
         textViewInfoArtist?.text = selectedSong.artist
+
 
         if (restore) {
             seekBarInfo?.progress = mPlayerAdapter?.getPlayerPosition()!!
