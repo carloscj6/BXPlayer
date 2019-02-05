@@ -23,6 +23,7 @@ import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.services.MusicPlayerService
+import com.revosleap.bxplayer.utils.utils.Universal
 
 class BXNotificationManager internal constructor(private val musicPlayerService: MusicPlayerService) {
     private val channelId = "com.revosleap.bxplayer.channelId"
@@ -76,6 +77,7 @@ class BXNotificationManager internal constructor(private val musicPlayerService:
         }
 
         val openPlayerIntent = Intent(musicPlayerService, PlayerActivity::class.java)
+        openPlayerIntent.action =Universal.infoAction
         openPlayerIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         val contentIntent = PendingIntent.getActivity(musicPlayerService, requestCode,
                 openPlayerIntent, 0)

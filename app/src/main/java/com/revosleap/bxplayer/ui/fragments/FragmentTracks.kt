@@ -9,30 +9,37 @@ import android.os.Handler
 import android.os.IBinder
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.PopupMenu
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.revosleap.bxplayer.R
-import com.revosleap.bxplayer.services.MusicPlayerService
-import com.revosleap.bxplayer.utils.adapters.TrackAdapter
 import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
 import com.revosleap.bxplayer.utils.playback.PlayerAdapter
 import com.revosleap.bxplayer.utils.utils.GetAudio
+import com.revosleap.bxplayer.utils.utils.PreferenceHelper
+import com.revosleap.bxplayer.utils.utils.Universal
+import com.revosleap.simpleadapter.SimpleAdapter
+import com.revosleap.simpleadapter.SimpleCallbacks
 import kotlinx.android.synthetic.main.fragment_tracks.*
+import kotlinx.android.synthetic.main.track.view.*
 
 
-class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
+class FragmentTracks : Fragment(), SimpleCallbacks {
 
     private var serviceBound = false
     private var list = mutableListOf<AudioModel>()
     private var mMusicService: MusicPlayerService? = null
     private var mIsBound: Boolean = false
-    private var trackAdapter: TrackAdapter? = null
+    private var simpleAdapter: SimpleAdapter? = null
     private var mPlayerAdapter: PlayerAdapter? = null
     private var mMusicNotificationManager: BXNotificationManager? = null
     private var mPlaybackListener: PlaybackListener? = null
+    private var preferenceHelper: PreferenceHelper? = null
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             mMusicService = (service as MusicPlayerService.MusicBinder).serviceInstance
@@ -56,28 +63,32 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-
         val view = inflater.inflate(R.layout.fragment_tracks, container, false)
-
-
         list = GetAudio().geAllAudio(activity!!.baseContext)
-        trackAdapter = TrackAdapter(list, activity!!, this)
-
+        simpleAdapter = SimpleAdapter(R.layout.track, this)
+        preferenceHelper = PreferenceHelper(activity!!)
         return view
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getSongList()
         trackRecycler.apply {
-            adapter = trackAdapter
+            adapter = simpleAdapter
             layoutManager = LinearLayoutManager(activity)
             hasFixedSize()
         }
+        buttonListPlayAll.setOnClickListener {
+            onSongSelected(list[0], list)
+        }
+        buttonListShuffle.setOnClickListener {
+            list.shuffle()
+            onSongSelected(list[0], list)
+        }
+        buttonListSort.setOnClickListener {
+            getSorting(it)
+        }
     }
-
 
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -92,7 +103,7 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
         doUnbindService()
     }
 
-    override fun onSongSelected(song: AudioModel, songs: List<AudioModel>) {
+    private fun onSongSelected(song: AudioModel, songs: List<AudioModel>) {
         mPlayerAdapter!!.setCurrentSong(song, songs)
         mPlayerAdapter!!.initMediaPlayer()
         mPlayerAdapter!!.getMediaPlayer()?.start()
@@ -100,6 +111,79 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
                 mMusicNotificationManager!!.createNotification())
 
 
+    }
+
+    override fun bindView(view: View, item: Any, position: Int) {
+        item as AudioModel
+        val title = view.textViewTitleTrack
+        val artist = view.textViewArtistTrack
+        val image = view.imageView2
+        artist.text = item.title
+        title.text = item.artist
+
+    }
+
+    override fun onViewClicked(view: View, item: Any, position: Int) {
+        onSongSelected(list[position], list)
+    }
+
+    override fun onViewLongClicked(it: View?, item: Any, position: Int) {
+
+    }
+
+    private fun getSongList() {
+        val sortOrder = preferenceHelper?.sortingStyle
+        if (sortOrder!!.isEmpty()) {
+            simpleAdapter?.addManyItems(list.toMutableList())
+        }
+        if (sortOrder == Universal.SORT_BY_ARTIST) {
+            val sorted = list.sortedWith(compareBy { it.artist })
+            simpleAdapter?.changeItems(sorted.toMutableList())
+            list = sorted.toMutableList()
+        }
+        if (sortOrder == Universal.SORT_BY_TITLE) {
+            val sorted = list.sortedWith(compareBy { it.title })
+            simpleAdapter?.changeItems(sorted.toMutableList())
+            list = sorted.toMutableList()
+        }
+        if (sortOrder == Universal.SORT_BY_YEAR) {
+            val dateSorted = list.sortedWith(compareBy { it.songYear })
+            simpleAdapter?.changeItems(dateSorted.toMutableList())
+            list = dateSorted.toMutableList()
+        }
+    }
+
+    private fun getSorting(view: View) {
+        val menu = PopupMenu(activity!!, view)
+        menu.menuInflater.inflate(R.menu.track_sorting, menu.menu)
+        menu.show()
+        menu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+            override fun onMenuItemClick(p0: MenuItem?): Boolean {
+                when (p0?.itemId) {
+                    R.id.item_artist -> {
+                       preferenceHelper?.sortingStyle = Universal.SORT_BY_ARTIST
+                        val sorted = list.sortedWith(compareBy { it.artist })
+                        simpleAdapter?.changeItems(sorted.toMutableList())
+                        list = sorted.toMutableList()
+                    }
+                    R.id.item_date -> {
+                        preferenceHelper?.sortingStyle = Universal.SORT_BY_YEAR
+                        val dateSorted = list.sortedWith(compareBy { it.songYear })
+                        simpleAdapter?.changeItems(dateSorted.toMutableList())
+                        list = dateSorted.toMutableList()
+                    }
+                    R.id.item_title -> {
+                       preferenceHelper?.sortingStyle = Universal.SORT_BY_TITLE
+                        val sorted = list.sortedWith(compareBy { it.title })
+                        simpleAdapter?.changeItems(sorted.toMutableList())
+                        list = sorted.toMutableList()
+                    }
+
+
+                }
+                return true
+            }
+        })
     }
 
     private fun doBindService() {
@@ -161,5 +245,13 @@ class FragmentTracks : Fragment(), TrackAdapter.SongSelectedListener {
             }, 250)
         }
     }
+    // val retriever = MediaMetadataRetriever()
+//        val inputStream: InputStream?
+//        retriever.setDataSource(path)
+//        if (retriever.embeddedPicture != null) {
+//            inputStream = ByteArrayInputStream(retriever.embeddedPicture)
+//            Glide.with(holder.itemView.context).load(inputStream)
+//                    .into(holder.trackImage)
+//        }
 
 }

@@ -27,6 +27,7 @@ import com.revosleap.bxplayer.utils.adapters.TabFragmentAdapter
 import com.revosleap.bxplayer.utils.playback.PlayerAdapter
 import com.revosleap.bxplayer.utils.utils.ArtistProvider
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
+import com.revosleap.bxplayer.utils.utils.Universal
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.controls.*
 import kotlinx.android.synthetic.main.tabs_main.*
@@ -71,6 +72,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     }
 
+
     override fun onPause() {
         super.onPause()
         doUnbindService()
@@ -79,6 +81,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     override fun onResume() {
         super.onResume()
         doBindService()
+
     }
 
     fun getPlayerService(): MusicPlayerService? {
@@ -108,24 +111,25 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     private fun control() {
         constControls!!.setOnClickListener {
-            val fragment = InfoFragment()
-            val fragmentTag = fragment.tag
-            val popped = supportFragmentManager.popBackStackImmediate(fragmentTag, 0)
-            if (!popped && supportFragmentManager.findFragmentByTag(fragmentTag) == null) {
-                supportFragmentManager
-                        .beginTransaction()
-                        .addToBackStack(fragmentTag)
-                        .add(R.id.frame_current, fragment, fragmentTag)
-                        .show(fragment)
-                        .commit()
-
-                constControls!!.visibility = View.GONE
-                frame_music.visibility = View.GONE
-
-            }
+            getInfoFragment()
         }
     }
+    private fun getInfoFragment() {
+        val fragment = InfoFragment()
+        val fragmentTag = fragment.tag
+        val popped = supportFragmentManager.popBackStackImmediate(fragmentTag, 0)
+        if (!popped && supportFragmentManager.findFragmentByTag(fragmentTag) == null) {
+            supportFragmentManager
+                    .beginTransaction()
+                    .addToBackStack(fragmentTag)
+                    .add(R.id.frame_current, fragment, fragmentTag)
+                    .show(fragment)
+                    .commit()
 
+            constControls!!.visibility = View.GONE
+            frame_music.visibility = View.GONE
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -185,6 +189,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         isServiceBound = true
         val startNotStickyIntent = Intent(this@PlayerActivity, MusicPlayerService::class.java)
         startService(startNotStickyIntent)
+
     }
 
     private fun doUnbindService() {

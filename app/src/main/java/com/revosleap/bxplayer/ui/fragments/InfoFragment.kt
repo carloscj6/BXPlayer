@@ -32,18 +32,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        val playerActivity = activity as PlayerActivity
-        mMusicService = playerActivity.getPlayerService()
-        if (mMusicService != null) {
-            mPlayerAdapter = mMusicService!!.mediaPlayerHolder
-            mMusicNotificationManager = mMusicService!!.musicNotificationManager
-        }
-        if (mPlaybackListener == null) {
-            mPlaybackListener = PlaybackListener()
-            mPlayerAdapter!!.setPlaybackInfoListener(mPlaybackListener!!)
-        }
-
-
+    getService()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -61,12 +50,24 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
+        getService()
         activity?.startService<MusicPlayerService>()
         mPlayerAdapter!!.getMediaPlayer()?.start()
         mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
                 mMusicNotificationManager!!.createNotification())
     }
-
+    private fun getService(){
+        val playerActivity = activity as PlayerActivity
+        mMusicService = playerActivity.getPlayerService()
+        if (mMusicService != null) {
+            mPlayerAdapter = mMusicService!!.mediaPlayerHolder
+            mMusicNotificationManager = mMusicService!!.musicNotificationManager
+        }
+        if (mPlaybackListener == null) {
+            mPlaybackListener = PlaybackListener()
+            mPlayerAdapter?.setPlaybackInfoListener(mPlaybackListener!!)
+        }
+    }
     private fun initializeSeekBar() {
         seekBarInfo.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             var userSelectedPosition = 0
@@ -94,7 +95,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
     }
 
     private fun updatePlayingStatus() {
-        val drawable = if (mPlayerAdapter!!.getState() != PlaybackInfoListener.State.PAUSED)
+        val drawable = if (mPlayerAdapter?.getState() != PlaybackInfoListener.State.PAUSED)
             R.drawable.pause
         else
             R.drawable.play_icon
@@ -110,14 +111,14 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
 
         if (startPlay) {
-            mPlayerAdapter!!.getMediaPlayer()?.start()
+            mPlayerAdapter?.getMediaPlayer()?.start()
             Handler().postDelayed({
                 mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
                         mMusicNotificationManager!!.createNotification())
             }, 250)
         }
 
-        val selectedSong = mPlayerAdapter!!.getCurrentSong()
+        val selectedSong = mPlayerAdapter?.getCurrentSong()
 
         mSelectedArtist = selectedSong?.artist
         val duration = selectedSong?.duration
@@ -127,7 +128,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
         textViewInfoArtist?.text = selectedSong.artist
 
         if (restore) {
-            seekBarInfo?.progress = mPlayerAdapter!!.getPlayerPosition()
+            seekBarInfo?.progress = mPlayerAdapter?.getPlayerPosition()!!
             updatePlayingStatus()
 
         }
@@ -173,7 +174,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
         override fun onStateChanged(@State state: Int) {
             updatePlayingStatus()
-            if (mPlayerAdapter!!.getState() != PlaybackInfoListener.State.RESUMED && mPlayerAdapter!!.getState() != PlaybackInfoListener.State.PAUSED) {
+            if (mPlayerAdapter?.getState() != PlaybackInfoListener.State.RESUMED && mPlayerAdapter?.getState() != PlaybackInfoListener.State.PAUSED) {
                 updatePlayingInfo(restore = false, startPlay = true)
             }
             if (state == PlaybackInfoListener.State.PLAYING) {
@@ -189,8 +190,8 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
     private fun checkIsPlayer(): Boolean {
 
-        val isPlayer = mPlayerAdapter!!.isMediaPlayer()
-        if (!isPlayer) {
+        val isPlayer = mPlayerAdapter?.isMediaPlayer()
+        if (!isPlayer!!) {
             EqualizerUtils.notifyNoSessionId(activity!!)
         }
         return isPlayer
@@ -198,13 +199,13 @@ class InfoFragment : Fragment(), View.OnClickListener {
 
     private fun skipPrev() {
         if (checkIsPlayer()) {
-            mPlayerAdapter!!.instantReset()
+            mPlayerAdapter?.instantReset()
         }
     }
 
     private fun resumeOrPause() {
         if (checkIsPlayer()) {
-            mPlayerAdapter!!.resumeOrPause()
+            mPlayerAdapter?.resumeOrPause()
         }
     }
 
@@ -217,7 +218,7 @@ class InfoFragment : Fragment(), View.OnClickListener {
     fun openEqualizer() {
         if (EqualizerUtils.hasEqualizer(activity!!)) {
             if (checkIsPlayer()) {
-                mPlayerAdapter!!.openEqualizer(activity!!)
+                mPlayerAdapter?.openEqualizer(activity!!)
             }
         } else {
             Toast.makeText(activity, "No equalizer found", Toast.LENGTH_SHORT).show()

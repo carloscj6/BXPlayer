@@ -6,19 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.FragmentTracks">
 
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <android.support.v7.widget.RecyclerView
-
-            android:id="@+id/trackRecycler"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ImageButton
+            android:layout_marginStart="7dp"
+            android:id="@+id/buttonListSort"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:padding="10dp"
+            android:src="@drawable/ic_overflow_menu"
+            android:tint="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@id/trackRecycler"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/buttonListShuffle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:padding="10dp"
+            android:src="@drawable/shuffle"
+            android:tint="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@id/trackRecycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/buttonListPlayAll"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="7dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:padding="10dp"
+            android:src="@drawable/play_icon"
+            android:tint="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@id/trackRecycler"
+            app:layout_constraintEnd_toStartOf="@id/buttonListShuffle"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/trackRecycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonListSort" />
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

@@ -28,14 +28,14 @@ class TrackAdapter(internal var tracklist: MutableList<AudioModel>, private val 
         val path = model.path
         holder.artist.text = title
         holder.title.text = artist
-        val retriever = MediaMetadataRetriever()
-        val inputStream: InputStream?
-        retriever.setDataSource(path)
-        if (retriever.embeddedPicture != null) {
-            inputStream = ByteArrayInputStream(retriever.embeddedPicture)
-            Glide.with(holder.itemView.context).load(inputStream)
-                    .into(holder.trackImage)
-        }
+//        val retriever = MediaMetadataRetriever()
+//        val inputStream: InputStream?
+//        retriever.setDataSource(path)
+//        if (retriever.embeddedPicture != null) {
+//            inputStream = ByteArrayInputStream(retriever.embeddedPicture)
+//            Glide.with(holder.itemView.context).load(inputStream)
+//                    .into(holder.trackImage)
+//        }
 
 
     }
