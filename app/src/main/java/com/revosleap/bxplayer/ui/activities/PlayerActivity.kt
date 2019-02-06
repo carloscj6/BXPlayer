@@ -154,7 +154,10 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     private fun control() {
         constControls!!.setOnClickListener {
-            getInfoFragment()
+            if (isPlayingNew){
+                getInfoFragment()
+            }
+
         }
     }
 
@@ -238,11 +241,11 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         val jsonText = preferenceHelper?.playingList
         val type: Type = object : TypeToken<MutableList<AudioModel>>() {}.type
         val songs = gson.fromJson<MutableList<AudioModel>>(jsonText, type)
-        warn(songs.size)
-        currentSongs = songs
+
         val position = preferenceHelper?.currentIndex
         currentPosition = position!!
-        if (currentSongs.size > 0) {
+        if (songs!=null && songs.size > 0) {
+            currentSongs = songs
             val song = currentSongs[position!!]
             textViewArtName?.text = song.artist
             textViewTitle.text = song.title
