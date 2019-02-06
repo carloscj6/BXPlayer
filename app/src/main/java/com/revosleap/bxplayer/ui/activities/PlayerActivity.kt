@@ -154,7 +154,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     private fun control() {
         constControls!!.setOnClickListener {
-            if (isPlayingNew){
+            if (isPlayingNew || mPlayerAdapter?.isPlaying()!!){
                 getInfoFragment()
             }
 
