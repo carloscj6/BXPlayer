@@ -7,5 +7,6 @@ object Universal {
     const val SORT_BY_TITLE = "title"
     const val SORT_BY_NAME = "name"
     const val SORT_BY_SONGS = "songs"
-
+    const val ALBUM_BUNDLE= "album.bundle"
+    const val ALBUM_INFO_TAG ="album.info"
 }

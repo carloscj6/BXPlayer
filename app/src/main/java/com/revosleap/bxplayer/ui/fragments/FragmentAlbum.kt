@@ -1,6 +1,7 @@
 package com.revosleap.bxplayer.ui.fragments
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -8,10 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import com.google.gson.Gson
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.models.Album
 import com.revosleap.bxplayer.models.Song
+import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.utils.AlbumProvider
 import com.revosleap.bxplayer.utils.utils.PreferenceHelper
 import com.revosleap.bxplayer.utils.utils.SongProvider
@@ -24,12 +27,19 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 
-class FragmentAlbum : Fragment(), SimpleCallbacks, AnkoLogger,BXColor {
+class FragmentAlbum : Fragment(), SimpleCallbacks, AnkoLogger, BXColor {
     private var musicList = mutableListOf<Song>()
     private var albumList = mutableListOf<Album>()
     var simpleAdapter: SimpleAdapter? = null
     private var preferenceHelper: PreferenceHelper? = null
-    private var viewColor=0
+    private var playerActivity: PlayerActivity? = null
+    private var viewColor = 0
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        playerActivity = activity!! as PlayerActivity
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         simpleAdapter = SimpleAdapter(R.layout.album_item, this)
@@ -41,7 +51,6 @@ class FragmentAlbum : Fragment(), SimpleCallbacks, AnkoLogger,BXColor {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        albumList = AlbumProvider.retrieveAlbums(musicList)
         getAlbumList()
         simpleAdapter?.setHasStableIds(true)
         recyclerViewAlbum.apply {
@@ -52,7 +61,7 @@ class FragmentAlbum : Fragment(), SimpleCallbacks, AnkoLogger,BXColor {
         buttonListSortAlbums.setOnClickListener {
             sortAlbums(it)
         }
-        if (viewColor!=0){
+        if (viewColor != 0) {
             buttonListSortAlbums?.setColorFilter(viewColor)
         }
     }
@@ -62,12 +71,12 @@ class FragmentAlbum : Fragment(), SimpleCallbacks, AnkoLogger,BXColor {
         val albumTitle = view.textViewAlbumName
         val albumArtist = view.textViewAlbumArtist
         val artist = item.artistName + " (" + item.songs.size + ")"
-        albumTitle.text = item.artistName
+        albumTitle.text = item.title
         albumArtist.text = artist
     }
 
     override fun onViewClicked(view: View, item: Any, position: Int) {
-
+        goToInfo(position)
     }
 
     override fun onViewLongClicked(it: View?, item: Any, position: Int) {
@@ -77,6 +86,21 @@ class FragmentAlbum : Fragment(), SimpleCallbacks, AnkoLogger,BXColor {
     override fun songColor(color: Int) {
         viewColor = color
 
+    }
+
+    private fun goToInfo(position: Int) {
+        val gson = Gson()
+        val gsonString = gson.toJson(albumList[position].songs)
+        val albumInfo = FragmentAlbumInfo()
+        val bundle = Bundle()
+        bundle.putString(Universal.ALBUM_BUNDLE, gsonString)
+        albumInfo.arguments = bundle
+        playerActivity?.supportFragmentManager!!
+                .beginTransaction()
+                .replace(R.id.frame_current, albumInfo, Universal.ALBUM_INFO_TAG)
+                .addToBackStack(null)
+                .commit()
+        playerActivity?.replaceFragment()
     }
 
     private fun sortAlbums(view: View) {
@@ -111,8 +135,10 @@ class FragmentAlbum : Fragment(), SimpleCallbacks, AnkoLogger,BXColor {
 
     private fun getAlbumList() {
         val sortOrder = preferenceHelper?.albumSorting
+        albumList = AlbumProvider.retrieveAlbums(musicList)
         if (sortOrder!!.isEmpty()) {
             simpleAdapter?.addManyItems(albumList.toMutableList())
+
         }
         if (sortOrder == Universal.SORT_BY_ARTIST) {
             val sorted = albumList.sortedWith(compareBy { it.artistName })

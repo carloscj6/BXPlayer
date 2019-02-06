@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.ui.viewholders.TrackViewHolder
-import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.models.Song
 
-class ArtistAdapter(private var artistList: MutableList<AudioModel>, internal var context: Context) : RecyclerView.Adapter<TrackViewHolder>() {
+class ArtistAdapter(private var artistList: MutableList<Song>, internal var context: Context) : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.track, parent, false)

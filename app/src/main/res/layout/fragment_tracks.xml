@@ -19,7 +19,7 @@
             android:contentDescription="@string/app_name"
             android:padding="10dp"
             android:src="@drawable/ic_overflow_menu"
-            android:tint="@color/colorAccent"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toTopOf="@id/trackRecycler"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,8 +31,8 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:padding="10dp"
-            android:src="@drawable/shuffle"
-            android:tint="@color/colorAccent"
+            android:src="@drawable/ic_shuffle_bordered"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toTopOf="@id/trackRecycler"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -46,7 +46,7 @@
             android:contentDescription="@string/app_name"
             android:padding="10dp"
             android:src="@drawable/play_icon"
-            android:tint="@color/colorAccent"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toTopOf="@id/trackRecycler"
             app:layout_constraintEnd_toStartOf="@id/buttonListShuffle"
             app:layout_constraintTop_toTopOf="parent" />

@@ -18,7 +18,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 
-import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.models.Song
 import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.R
@@ -121,18 +121,18 @@ class BXNotificationManager internal constructor(private val musicPlayerService:
         }
     }
 
-    private fun updateMetaData(mSelectedSong: AudioModel) {
+    private fun updateMetaData(mSelectedSong: Song) {
         mediaSession = MediaSessionCompat(context, "BXPlayer")
         mediaSession!!.setMetadata(MediaMetadataCompat.Builder()
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, AudioUtils.cover(mSelectedSong.path!!,context))
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, mSelectedSong.artist)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, mSelectedSong.album)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, mSelectedSong.albumName)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, mSelectedSong.title)
                 .build())
     }
 
     @Throws(RemoteException::class)
-    private fun initMediaSession(model: AudioModel) {
+    private fun initMediaSession(model: Song) {
         if (mediaSessionManager != null) return  //mediaSessionManager exists
 
         mediaSessionManager = context.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager

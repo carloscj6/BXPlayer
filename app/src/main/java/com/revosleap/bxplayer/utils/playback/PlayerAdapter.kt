@@ -4,7 +4,7 @@ package com.revosleap.bxplayer.utils.playback
 import android.app.Activity
 import android.media.MediaPlayer
 import com.revosleap.bxplayer.models.Album
-import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.models.Song
 
 
 interface PlayerAdapter {
@@ -15,7 +15,7 @@ interface PlayerAdapter {
 
     fun isReset(): Boolean
 
-    fun getCurrentSong(): AudioModel?
+    fun getCurrentSong(): Song?
 
     fun getPlayerPosition(): Int
 
@@ -41,7 +41,7 @@ interface PlayerAdapter {
 
     fun registerNotificationActionsReceiver(isRegister: Boolean)
 
-    fun setCurrentSong(song: AudioModel, songs: MutableList<AudioModel>)
+    fun setCurrentSong(song: Song, songs: MutableList<Song>)
 
     fun onPauseActivity()
 

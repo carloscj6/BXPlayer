@@ -17,7 +17,7 @@ import android.telephony.TelephonyManager
 import com.google.gson.Gson
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.models.Album
-import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.models.Song
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
 import com.revosleap.bxplayer.utils.utils.PreferenceHelper
 
@@ -36,8 +36,8 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     private var mPlaybackInfoListener: PlaybackInfoListener? = null
     private var mExecutor: ScheduledExecutorService? = null
     private var mSeekBarPositionUpdateTask: Runnable? = null
-    private var mSelectedSong: AudioModel? = null
-    private var mSongs: List<AudioModel>? = null
+    private var mSelectedSong: Song? = null
+    private var mSongs: List<Song>? = null
     private var mSelectedAlbum: Album? = null
     private var sReplaySong = false
     @PlaybackInfoListener.State
@@ -118,7 +118,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     }
 
 
-    override fun getCurrentSong(): AudioModel? {
+    override fun getCurrentSong(): Song? {
         val index = mSongs?.indexOf(mSelectedSong)
         preferenceHelper.currentIndex =index!!
         return mSelectedSong
@@ -132,14 +132,14 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
         mSelectedAlbum = album
     }
 
-    override fun setCurrentSong(song: AudioModel, songs: MutableList<AudioModel>) {
+    override fun setCurrentSong(song: Song, songs: MutableList<Song>) {
         mSelectedSong = song
         mSongs = songs
         if (songs.size>0){
          saveSongs(songs)
         }
     }
-    private fun saveSongs(songs: MutableList<AudioModel>){
+    private fun saveSongs(songs: MutableList<Song>){
         val gson = Gson()
         val gsonString = gson.toJson(songs)
         preferenceHelper.playingList = gsonString

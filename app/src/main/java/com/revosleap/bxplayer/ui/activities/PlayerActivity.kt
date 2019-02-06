@@ -27,7 +27,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.callbacks.BXColor
-import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.models.Song
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.fragments.InfoFragment
 import com.revosleap.bxplayer.utils.adapters.TabFragmentAdapter
@@ -36,13 +36,13 @@ import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
 import com.revosleap.bxplayer.utils.playback.PlayerAdapter
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
 import com.revosleap.bxplayer.utils.utils.PreferenceHelper
+import com.revosleap.bxplayer.utils.utils.Universal
 import kotlinx.android.synthetic.main.activity_player.*
 import kotlinx.android.synthetic.main.controls.*
 import kotlinx.android.synthetic.main.tabs_main.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.startService
 import org.jetbrains.anko.toast
-import org.jetbrains.anko.warn
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.lang.reflect.Type
@@ -55,7 +55,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     private var mMusicService: MusicPlayerService? = null
     private var mPlaybackListener: PlaybackListener? = null
     private var mMusicNotificationManager: BXNotificationManager? = null
-    private var currentSongs = mutableListOf<AudioModel>()
+    private var currentSongs = mutableListOf<Song>()
     private var currentPosition = 0
     private var isPlayingNew = false
     private var isServiceBound = false
@@ -173,11 +173,17 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
                     .show(fragment)
                     .commit()
 
-            constControls!!.visibility = View.GONE
-            frame_music.visibility = View.GONE
-        }
-    }
 
+        }
+        frame_music.visibility = View.GONE
+        constControls.visibility =View.GONE
+    }
+    fun replaceFragment(){
+        frame_music.visibility = View.GONE
+    }
+    fun controls():View{
+        return constControls
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_player, menu)
@@ -196,7 +202,12 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     override fun onBackPressed() {
         val fragments = supportFragmentManager.backStackEntryCount
-        if (fragments == 1) {
+        if (supportFragmentManager.findFragmentByTag(Universal.ALBUM_INFO_TAG)!=null){
+            supportFragmentManager.popBackStack()
+            frame_music.visibility = View.VISIBLE
+
+        }
+        else if (fragments == 1) {
             supportFragmentManager.popBackStackImmediate()
             frame_music.visibility = View.VISIBLE
             constControls!!.visibility = View.VISIBLE
@@ -239,8 +250,8 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     private fun getCurrentList() {
         val gson = Gson()
         val jsonText = preferenceHelper?.playingList
-        val type: Type = object : TypeToken<MutableList<AudioModel>>() {}.type
-        val songs = gson.fromJson<MutableList<AudioModel>>(jsonText, type)
+        val type: Type = object : TypeToken<MutableList<Song>>() {}.type
+        val songs = gson.fromJson<MutableList<Song>>(jsonText, type)
 
         val position = preferenceHelper?.currentIndex
         currentPosition = position!!
@@ -263,7 +274,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         }
     }
 
-    private fun onSongSelected(song: AudioModel, songs: MutableList<AudioModel>) {
+    private fun onSongSelected(song: Song, songs: MutableList<Song>) {
         mPlayerAdapter!!.setCurrentSong(song, songs)
         mPlayerAdapter!!.initMediaPlayer()
         mPlayerAdapter!!.getMediaPlayer()?.start()
@@ -327,13 +338,21 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         return isPlayer
     }
 
-    fun updateBg(image:Bitmap) {
-        imageViewInfo.setImageBitmap(image)
-        blurryLayout.setBitmapBlurry(image, 20, 10)
-    }
-    fun updatePlaying(audioModel: AudioModel){
-        textViewArtName?.text = audioModel.artist
-        textViewTitle?.text = audioModel.title
+
+    fun updatePlaying(song: Song){
+        textViewArtName?.text = song.artist
+        textViewTitle?.text = song.title
+        val retriever = MediaMetadataRetriever()
+        val inputStream: InputStream?
+        retriever.setDataSource(song.path)
+        if (retriever.embeddedPicture!=null){
+            inputStream = ByteArrayInputStream(retriever.embeddedPicture)
+           val image =BitmapFactory.decodeStream(inputStream)
+            blurryLayout.setBitmapBlurry(image, 20, 10)
+        }else{
+            val image =BitmapFactory.decodeResource(resources,R.drawable.cover2)
+            blurryLayout.setBitmapBlurry(image, 20, 10)
+        }
     }
 
     private fun updatePlayingInfo(restore: Boolean, startPlay: Boolean) {
@@ -363,7 +382,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
             resources.getColor(R.color.colorAccent, null)
         } else resources.getColor(R.color.colorAccent)
         Palette.from(bitmap).generate { palette ->
-            val vibrant = palette?.dominantSwatch
+            val vibrant = palette?.lightVibrantSwatch
             try {
                 color = vibrant?.rgb!!
                 setViewColors(color)

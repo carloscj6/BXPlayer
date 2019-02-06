@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.fragments.FragmentAlbum">
+    tools:context=".ui.fragments.FragmentAlbum"
+    android:id="@+id/constraint_album">
 
     <ImageButton
         android:id="@+id/buttonListSortAlbums"
@@ -16,7 +17,7 @@
         android:contentDescription="@string/app_name"
         android:padding="10dp"
         android:src="@drawable/ic_overflow_menu"
-        android:tint="@color/colorAccent"
+        android:tint="@android:color/white"
         app:layout_constraintBottom_toTopOf="@id/recyclerViewAlbum"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

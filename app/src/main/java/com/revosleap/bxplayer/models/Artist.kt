@@ -1,6 +1,8 @@
 package com.revosleap.bxplayer.models
 
-class Artist {
+import java.io.Serializable
+
+class Artist:Serializable {
     val albums: MutableList<Album> = mutableListOf()
 
     val id: Int

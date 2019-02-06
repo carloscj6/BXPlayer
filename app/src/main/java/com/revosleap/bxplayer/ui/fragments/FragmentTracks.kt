@@ -9,7 +9,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -17,7 +16,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.callbacks.BXColor
-import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.models.Song
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
@@ -33,7 +32,7 @@ import kotlinx.android.synthetic.main.track.view.*
 
 class FragmentTracks : Fragment(), SimpleCallbacks,BXColor {
     private var serviceBound = false
-    private var list = mutableListOf<AudioModel>()
+    private var list = mutableListOf<Song>()
     private var mMusicService: MusicPlayerService? = null
     private var mIsBound: Boolean = false
     private var simpleAdapter: SimpleAdapter? = null
@@ -123,7 +122,7 @@ class FragmentTracks : Fragment(), SimpleCallbacks,BXColor {
         buttonListShuffle?.setColorFilter(color)
         buttonListPlayAll?.setColorFilter(color)
     }
-    private fun onSongSelected(song: AudioModel, songs:MutableList<AudioModel>) {
+    private fun onSongSelected(song: Song, songs:MutableList<Song>) {
         mPlayerAdapter!!.setCurrentSong(song, songs)
         mPlayerAdapter!!.initMediaPlayer()
         mPlayerAdapter!!.getMediaPlayer()?.start()
@@ -134,7 +133,7 @@ class FragmentTracks : Fragment(), SimpleCallbacks,BXColor {
     }
 
     override fun bindView(view: View, item: Any, position: Int) {
-        item as AudioModel
+        item as Song
         val title = view.textViewTitleTrack
         val artist = view.textViewArtistTrack
         val image = view.imageView2

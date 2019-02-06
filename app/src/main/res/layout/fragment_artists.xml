@@ -14,7 +14,7 @@
         android:contentDescription="@string/app_name"
         android:padding="10dp"
         android:src="@drawable/ic_overflow_menu"
-        android:tint="@color/colorAccent"
+        android:tint="@android:color/white"
         app:layout_constraintBottom_toTopOf="@id/artistrecycler"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

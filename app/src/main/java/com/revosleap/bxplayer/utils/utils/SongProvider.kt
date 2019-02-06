@@ -5,7 +5,6 @@ import android.database.Cursor
 import android.provider.MediaStore
 import com.revosleap.bxplayer.models.Album
 import com.revosleap.bxplayer.models.Song
-import java.util.*
 
 object SongProvider {
     private val TITLE = 0
@@ -54,26 +53,24 @@ object SongProvider {
 
         cursor?.close()
         if (songs.size > 1) {
-            sortSongsByTrack(songs)
+            songs.sortWith(compareBy { it.title })
         }
         return songs
     }
 
-    private fun sortSongsByTrack(songs: MutableList<Song>) {
-        songs.sortWith(Comparator { obj1, obj2 -> java.lang.Long.compare(obj1.trackNumber.toLong(), obj2.trackNumber.toLong()) })
-    }
 
     private fun getSongFromCursorImpl(cursor: Cursor): Song {
-        val title = cursor.getString(TITLE)
-        val trackNumber = cursor.getInt(TRACK)
-        val year = cursor.getInt(YEAR)
-        val duration = cursor.getInt(DURATION)
-        val uri = cursor.getString(PATH)
-        val albumName = cursor.getString(ALBUM)
-        val artistId = cursor.getInt(ARTIST_ID)
-        val artistName = cursor.getString(ARTIST)
+        val song = Song()
+        song.title = cursor.getString(TITLE)
+        song.trackNumber = cursor.getInt(TRACK)
+        song.songYear = cursor.getInt(YEAR)
+        song.duration = cursor.getInt(DURATION)
+        song.path = cursor.getString(PATH)
+        song.albumName = cursor.getString(ALBUM)
+        song.artistId = cursor.getInt(ARTIST_ID)
+        song.artist = cursor.getString(ARTIST)
 
-        return Song(title, trackNumber, year, duration, uri, albumName, artistId, artistName)
+        return song
     }
 
     internal fun makeSongCursor(context: Context, sortOrder: String?): Cursor? {

@@ -1,20 +1,16 @@
 package com.revosleap.bxplayer.utils.adapters
 
 import android.app.Activity
-import android.media.MediaMetadataRetriever
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.revosleap.bxplayer.R
-import com.revosleap.bxplayer.models.AudioModel
-import java.io.ByteArrayInputStream
-import java.io.InputStream
+import com.revosleap.bxplayer.models.Song
 
-class TrackAdapter(internal var tracklist: MutableList<AudioModel>, private val mActivity: Activity, private val mSongSelectedListener: SongSelectedListener) : RecyclerView.Adapter<TrackAdapter.Holder>() {
+class TrackAdapter(internal var tracklist: MutableList<Song>, private val mActivity: Activity, private val mSongSelectedListener: SongSelectedListener) : RecyclerView.Adapter<TrackAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track, parent, false)
@@ -45,7 +41,7 @@ class TrackAdapter(internal var tracklist: MutableList<AudioModel>, private val 
     }
 
     interface SongSelectedListener {
-        fun onSongSelected(song: AudioModel, songs: List<AudioModel>)
+        fun onSongSelected(song: Song, songs: List<Song>)
     }
 
     inner class Holder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {

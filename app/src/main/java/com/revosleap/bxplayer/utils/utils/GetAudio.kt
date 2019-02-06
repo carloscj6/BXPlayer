@@ -2,16 +2,14 @@ package com.revosleap.bxplayer.utils.utils
 
 import android.content.Context
 import android.provider.MediaStore
-import android.util.Log
-import android.widget.Toast
-import com.revosleap.bxplayer.models.AudioModel
+import com.revosleap.bxplayer.models.Song
 import org.jetbrains.anko.toast
 import java.util.*
 
 class GetAudio {
-    fun geAllAudio(context: Context): MutableList<AudioModel> {
+    fun geAllAudio(context: Context): MutableList<Song> {
 
-        val temAudioList = ArrayList<AudioModel>()
+        val temAudioList = ArrayList<Song>()
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val order = MediaStore.Audio.Media.TITLE
 
@@ -20,7 +18,7 @@ class GetAudio {
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
-                val model = AudioModel()
+                val model = Song()
                 val path = cursor.getString(0)
                 val album = cursor.getString(1)
                 val artist = cursor.getString(2)
@@ -29,7 +27,7 @@ class GetAudio {
 
                 try {
                     model.title = name
-                    model.album = album
+                    model.albumName = album
                     model.artist = artist
                     model.path = path
                     model.duration = Integer.parseInt(duration)

@@ -84,7 +84,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:src="@drawable/playlist"
-            android:tint="@color/colorAccentLight"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -98,7 +98,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:src="@drawable/favorite_border"
-            android:tint="@color/colorAccentLight"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonInfoVol"
             app:layout_constraintStart_toEndOf="@+id/buttonInfoPlaylist" />
@@ -112,7 +112,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:src="@drawable/volume_available"
-            android:tint="@color/colorAccentLight"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </android.support.constraint.ConstraintLayout>
@@ -137,7 +137,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:progressTint="@color/colorAccentLight"
+            android:progressTint="@android:color/white"
             android:secondaryProgressTint="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -176,7 +176,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:src="@drawable/shuffle"
-            android:tint="@color/colorAccentLight"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonInfoPrev"
             app:layout_constraintStart_toStartOf="parent" />
@@ -189,7 +189,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:src="@drawable/previous"
-            android:tint="@color/colorAccentLight"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonInfoPlay"
             app:layout_constraintStart_toEndOf="@id/buttonInfoShuffle" />
@@ -202,7 +202,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:src="@drawable/play_icon"
-            android:tint="@color/colorAccentLight"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonInfoNext"
             app:layout_constraintStart_toEndOf="@+id/buttonInfoPrev" />
@@ -215,7 +215,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:src="@drawable/next"
-            android:tint="@color/colorAccentLight"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonInfoAll"
             app:layout_constraintStart_toEndOf="@+id/buttonInfoPlay" />
@@ -228,7 +228,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/app_name"
             android:src="@drawable/repeat"
-            android:tint="@color/colorAccentLight"
+            android:tint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/buttonInfoNext" />

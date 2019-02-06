@@ -60,6 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewArtName" />
 
     <ImageButton
+        android:tint="@android:color/white"
         android:clickable="true"
         android:focusable="true"
         android:id="@+id/buttonPrev"
@@ -77,6 +78,7 @@
         app:layout_constraintVertical_bias="0.511" />
 
     <ImageButton
+        android:tint="@android:color/white"
         android:clickable="true"
         android:focusable="true"
         android:id="@+id/buttonPlay"
@@ -95,6 +97,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
+        android:tint="@android:color/white"
         android:clickable="true"
         android:focusable="true"
         android:id="@+id/buttonNext"

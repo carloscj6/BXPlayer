@@ -8,6 +8,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <android.support.design.widget.TabLayout
+            app:tabIndicatorColor="@android:color/white"
             app:tabTextAppearance="@style/tabText"
             android:id="@+id/tabsMain"
             android:layout_width="match_parent"

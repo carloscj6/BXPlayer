@@ -169,19 +169,27 @@ class InfoFragment : Fragment(), View.OnClickListener,BXColor {
         val retriever = MediaMetadataRetriever()
         val inputStream: InputStream?
         retriever.setDataSource(selectedSong?.path)
-        var image = BitmapFactory.decodeResource(playerActivity?.resources!!,R.drawable.cover2)
+
         if (retriever.embeddedPicture != null) {
             inputStream = ByteArrayInputStream(retriever.embeddedPicture)
-            image =BitmapFactory.decodeStream(inputStream)
+            val image =BitmapFactory.decodeStream(inputStream)
             imageViewInfo?.setImageBitmap(image)
+            try {
+                playerActivity?.updatePlaying(selectedSong)
+                getBxColor(image)
+            } catch (e: Exception) {
+            }
 
+        }else{
+            val image = BitmapFactory.decodeResource(playerActivity?.resources!!,R.drawable.cover2)
+            imageViewInfo?.setImageBitmap(image)
+            try {
+                playerActivity?.updatePlaying(selectedSong)
+                getBxColor(image)
+            } catch (e: Exception) {
+            }
         }
-        try {
-            playerActivity?.updatePlaying(selectedSong)
-            playerActivity?.updateBg(image)
-            getBxColor(image)
-        } catch (e: Exception) {
-        }
+
 
         if (restore) {
             seekBarInfo?.progress = mPlayerAdapter?.getPlayerPosition()!!
