@@ -26,6 +26,7 @@ import android.view.WindowManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.models.AudioModel
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.fragments.InfoFragment
@@ -58,6 +59,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     private var currentPosition = 0
     private var isPlayingNew = false
     private var isServiceBound = false
+    private var bxColor:BXColor? = null
     var color: Int = 0
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -92,6 +94,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         preferenceHelper = PreferenceHelper(this@PlayerActivity)
         getCurrentList()
 
+
     }
 
     override fun onStart() {
@@ -121,7 +124,9 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         }
 
     }
-
+    fun setColorCallback(bxColor: BXColor){
+        this@PlayerActivity.bxColor= bxColor
+    }
     fun getPlayerService(): MusicPlayerService? {
         return if (mMusicService != null) {
             mMusicService!!
@@ -138,7 +143,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
             addTab(this.newTab().setText("Artists"))
             this.tabGravity = TabLayout.GRAVITY_FILL
         }
-        mSectionsPagerAdapter = TabFragmentAdapter(supportFragmentManager, 5)
+        mSectionsPagerAdapter = TabFragmentAdapter(supportFragmentManager, 5,this@PlayerActivity)
         mViewPager.apply {
             adapter = mSectionsPagerAdapter
             currentItem = 2
@@ -319,9 +324,13 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         return isPlayer
     }
 
-    fun updateInformation(song: AudioModel) {
-        textViewArtName?.text = song.artist
-        textViewTitle.text = song.title
+    fun updateBg(image:Bitmap) {
+        imageViewInfo.setImageBitmap(image)
+        blurryLayout.setBitmapBlurry(image, 20, 10)
+    }
+    fun updatePlaying(audioModel: AudioModel){
+        textViewArtName?.text = audioModel.artist
+        textViewTitle?.text = audioModel.title
     }
 
     private fun updatePlayingInfo(restore: Boolean, startPlay: Boolean) {
@@ -357,6 +366,8 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
                 setViewColors(color)
                 tabsMain.tabRippleColor= ColorStateList.valueOf(color)
                 tabsMain.setSelectedTabIndicatorColor(color)
+                bxColor?.songColor(color)
+
             } catch (e: Exception) {
             }
         }

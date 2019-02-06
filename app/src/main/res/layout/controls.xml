@@ -24,6 +24,7 @@
 
 
     <TextView
+        android:textColor="@android:color/white"
         android:id="@+id/textViewArtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textColor="@android:color/white"
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

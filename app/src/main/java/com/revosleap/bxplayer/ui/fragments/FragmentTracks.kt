@@ -9,12 +9,14 @@ import android.os.Handler
 import android.os.IBinder
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.models.AudioModel
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
@@ -29,8 +31,7 @@ import kotlinx.android.synthetic.main.fragment_tracks.*
 import kotlinx.android.synthetic.main.track.view.*
 
 
-class FragmentTracks : Fragment(), SimpleCallbacks {
-
+class FragmentTracks : Fragment(), SimpleCallbacks,BXColor {
     private var serviceBound = false
     private var list = mutableListOf<AudioModel>()
     private var mMusicService: MusicPlayerService? = null
@@ -40,6 +41,7 @@ class FragmentTracks : Fragment(), SimpleCallbacks {
     private var mMusicNotificationManager: BXNotificationManager? = null
     private var mPlaybackListener: PlaybackListener? = null
     private var preferenceHelper: PreferenceHelper? = null
+    private var viewColor =0
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             mMusicService = (service as MusicPlayerService.MusicBinder).serviceInstance
@@ -88,8 +90,17 @@ class FragmentTracks : Fragment(), SimpleCallbacks {
         buttonListSort.setOnClickListener {
             getSorting(it)
         }
+        if (viewColor!=0){
+            setColors(viewColor)
+        }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (viewColor!=0){
+            setColors(viewColor)
+        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -102,7 +113,16 @@ class FragmentTracks : Fragment(), SimpleCallbacks {
         mPlaybackListener = null
         doUnbindService()
     }
+    override fun songColor(color: Int) {
+        viewColor = color
+       setColors(color)
 
+    }
+    private fun setColors(color: Int){
+        buttonListSort?.setColorFilter(color)
+        buttonListShuffle?.setColorFilter(color)
+        buttonListPlayAll?.setColorFilter(color)
+    }
     private fun onSongSelected(song: AudioModel, songs:MutableList<AudioModel>) {
         mPlayerAdapter!!.setCurrentSong(song, songs)
         mPlayerAdapter!!.initMediaPlayer()

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.models.Artist
 import com.revosleap.bxplayer.utils.utils.ArtistProvider
 import com.revosleap.bxplayer.utils.utils.PreferenceHelper
@@ -20,10 +21,11 @@ import kotlinx.android.synthetic.main.fragment_artists.*
 import org.jetbrains.anko.AnkoLogger
 
 
-class FragmentArtists : Fragment(), SimpleCallbacks, AnkoLogger {
+class FragmentArtists : Fragment(), SimpleCallbacks, AnkoLogger, BXColor {
     private var preferenceHelper: PreferenceHelper? = null
     private var simpleAdapter: SimpleAdapter? = null
     private var artistList = mutableListOf<Artist>()
+    private var viewColors = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         simpleAdapter = SimpleAdapter(R.layout.artist_item, this)
@@ -42,6 +44,9 @@ class FragmentArtists : Fragment(), SimpleCallbacks, AnkoLogger {
         }
         buttonListSortArtists.setOnClickListener {
             sortArtists(it)
+        }
+        if (viewColors != 0) {
+            buttonListSortArtists?.setColorFilter(viewColors)
         }
     }
 
@@ -67,6 +72,11 @@ class FragmentArtists : Fragment(), SimpleCallbacks, AnkoLogger {
     }
 
     override fun onViewLongClicked(it: View?, item: Any, position: Int) {
+
+    }
+
+    override fun songColor(color: Int) {
+        viewColors = color
 
     }
 

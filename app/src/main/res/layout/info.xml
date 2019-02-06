@@ -45,6 +45,7 @@
 
 
         <TextView
+            android:textColor="@android:color/white"
             android:id="@+id/textViewInfoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,6 +62,7 @@
             tools:text="My love, Glen washington" />
 
         <TextView
+            android:textColor="@android:color/white"
             android:id="@+id/textViewInfoArtist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,12 +138,15 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:progressTint="@color/colorAccentLight"
+            android:secondaryProgressTint="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:progressBackgroundTint="@color/colorAccentLight" />
+            tools:progressBackgroundTint="@color/colorAccentLight"
+           />
 
         <TextView
+            android:textColor="@android:color/white"
             android:id="@+id/textViewProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,6 +157,7 @@
             app:layout_constraintTop_toBottomOf="@+id/seekBarInfo" />
 
         <TextView
+            android:textColor="@android:color/white"
             android:id="@+id/textViewDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

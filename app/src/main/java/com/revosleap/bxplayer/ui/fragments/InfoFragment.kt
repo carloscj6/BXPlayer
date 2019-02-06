@@ -2,17 +2,22 @@ package com.revosleap.bxplayer.ui.fragments
 
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v7.graphics.Palette
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
@@ -22,21 +27,24 @@ import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
 import kotlinx.android.synthetic.main.info.*
 import org.jetbrains.anko.startService
+import org.jetbrains.anko.toast
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 
 
-class InfoFragment : Fragment(), View.OnClickListener {
+class InfoFragment : Fragment(), View.OnClickListener,BXColor {
     private var mUserIsSeeking: Boolean = false
     private var mSelectedArtist: String? = null
     private var mPlayerAdapter: PlayerAdapter? = null
     private var mMusicService: MusicPlayerService? = null
     private var mMusicNotificationManager: BXNotificationManager? = null
     private var mPlaybackListener: PlaybackListener? = null
-
+    private var playerActivity:PlayerActivity?=null
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         getService()
+        playerActivity =activity!!as PlayerActivity
+        playerActivity?.setColorCallback(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -59,6 +67,34 @@ class InfoFragment : Fragment(), View.OnClickListener {
         mPlayerAdapter!!.getMediaPlayer()?.start()
         mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
                 mMusicNotificationManager!!.createNotification())
+    }
+
+    override fun songColor(color: Int) {
+        buttonInfoPlaylist?.setColorFilter(color)
+        buttonInfoPlay?.setColorFilter(color)
+        buttonInfoAll?.setColorFilter(color)
+        buttonInfoFave?.setColorFilter(color)
+        buttonInfoVol?.setColorFilter(color)
+        seekBarInfo?.progressBackgroundTintList = ColorStateList.valueOf(color)
+        buttonInfoShuffle?.setColorFilter(color)
+        buttonInfoNext?.setColorFilter(color)
+        buttonInfoPrev?.setColorFilter(color)
+    }
+    private fun getBxColor(bitmap: Bitmap){
+        var color:Int
+        color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            activity?.resources!!.getColor(R.color.colorAccent, null)
+        } else activity?.resources!!.getColor(R.color.colorAccent)
+        Palette.from(bitmap).generate { palette ->
+            val vibrant = palette?.lightVibrantSwatch
+            try {
+                color = vibrant?.rgb!!
+               songColor(color)
+            } catch (e: Exception) {
+            }
+        }
+
+
     }
     private fun getService(){
         val playerActivity = activity as PlayerActivity
@@ -133,14 +169,19 @@ class InfoFragment : Fragment(), View.OnClickListener {
         val retriever = MediaMetadataRetriever()
         val inputStream: InputStream?
         retriever.setDataSource(selectedSong?.path)
+        var image = BitmapFactory.decodeResource(playerActivity?.resources!!,R.drawable.cover2)
         if (retriever.embeddedPicture != null) {
             inputStream = ByteArrayInputStream(retriever.embeddedPicture)
-            imageViewInfo?.setImageBitmap(BitmapFactory.decodeStream(inputStream))
+            image =BitmapFactory.decodeStream(inputStream)
+            imageViewInfo?.setImageBitmap(image)
 
-//            Glide.with(holder.itemView.context).load(inputStream)
-//                    .into(holder.trackImage)
         }
-
+        try {
+            playerActivity?.updatePlaying(selectedSong)
+            playerActivity?.updateBg(image)
+            getBxColor(image)
+        } catch (e: Exception) {
+        }
 
         if (restore) {
             seekBarInfo?.progress = mPlayerAdapter?.getPlayerPosition()!!

@@ -28,6 +28,7 @@
 
 
     <TextView
+        android:textColor="@android:color/white"
         android:id="@+id/textViewArtistTrack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -49,6 +50,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textColor="@android:color/white"
         android:id="@+id/textViewTitleTrack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

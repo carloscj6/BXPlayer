@@ -26,7 +26,12 @@
 
 
     <!-- INVERTED THEME -->
-
+<style name="tabText" >
+    <item name="android:textStyle">bold</item>
+    <item name="android:fontFamily">@font/roboto</item>
+    <item name="android:textColor">@android:color/white</item>
+    <item name="android:textSize">18sp</item>
+</style>
     <style name="AlertDialogStyleLight" parent="android:Theme.Material.Light.Dialog.Alert">
         <item name="android:colorAccent">?attr/accent_color</item>
         <item name="android:background">@color/light</item>

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    app:blurColor="@android:color/black"
     app:blurRadius="10"
     app:blurImage="@drawable/cover2"
     app:blurOpacity=".4"
@@ -19,6 +20,9 @@
 
 
     <android.support.v7.widget.Toolbar
+
+        app:title="@string/app_name"
+        app:titleTextColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
