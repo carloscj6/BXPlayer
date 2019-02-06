@@ -18,6 +18,7 @@ import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.models.Song
 import com.revosleap.bxplayer.services.MusicPlayerService
+import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
 import com.revosleap.bxplayer.utils.playback.PlayerAdapter
@@ -40,6 +41,7 @@ class FragmentTracks : Fragment(), SimpleCallbacks,BXColor {
     private var mMusicNotificationManager: BXNotificationManager? = null
     private var mPlaybackListener: PlaybackListener? = null
     private var preferenceHelper: PreferenceHelper? = null
+    private var playerActivity:PlayerActivity?=null
     private var viewColor =0
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -59,6 +61,7 @@ class FragmentTracks : Fragment(), SimpleCallbacks,BXColor {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        playerActivity= activity!! as PlayerActivity
         doBindService()
     }
 
@@ -225,21 +228,17 @@ class FragmentTracks : Fragment(), SimpleCallbacks,BXColor {
     internal inner class PlaybackListener : PlaybackInfoListener() {
 
         override fun onPositionChanged(position: Int) {
-            //            if (!mUserIsSeeking) {
-            //                mSeekBarAudio.setProgress(position);
-            //            }
+
         }
 
         override fun onStateChanged(@State state: Int) {
-            //
-            //            updatePlayingStatus();
             if (mPlayerAdapter?.getState() != State.RESUMED && mPlayerAdapter?.getState() != State.PAUSED) {
                 updatePlayingInfo(false, startPlay = true)
             }
         }
 
         override fun onPlaybackCompleted() {
-            //updateResetStatus(true);
+
         }
     }
 
@@ -251,6 +250,8 @@ class FragmentTracks : Fragment(), SimpleCallbacks,BXColor {
                         mMusicNotificationManager!!.createNotification())
             }, 250)
         }
+        val song =mPlayerAdapter?.getCurrentSong()!!
+        playerActivity?.updatePlaying(song)
         if (restore) {
             Handler().postDelayed({
                 //stop foreground if coming from pause state

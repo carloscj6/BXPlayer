@@ -90,6 +90,7 @@ class InfoFragment : Fragment(), View.OnClickListener,BXColor {
             try {
                 color = vibrant?.rgb!!
                songColor(color)
+                playerActivity?.setViewColors(color)
             } catch (e: Exception) {
             }
         }

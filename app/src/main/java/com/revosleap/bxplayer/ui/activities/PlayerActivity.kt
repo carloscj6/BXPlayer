@@ -348,10 +348,14 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         if (retriever.embeddedPicture!=null){
             inputStream = ByteArrayInputStream(retriever.embeddedPicture)
            val image =BitmapFactory.decodeStream(inputStream)
-            blurryLayout.setBitmapBlurry(image, 20, 10)
+            blurryLayout?.setBitmapBlurry(image, 20, 10)
+            imageViewInfo?.setImageBitmap(image)
+            getBxColor(image)
         }else{
             val image =BitmapFactory.decodeResource(resources,R.drawable.cover2)
-            blurryLayout.setBitmapBlurry(image, 20, 10)
+            blurryLayout?.setBitmapBlurry(image, 20, 10)
+            imageViewInfo?.setImageBitmap(image)
+            getBxColor(image)
         }
     }
 
@@ -389,6 +393,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
                 tabsMain.tabRippleColor= ColorStateList.valueOf(color)
                 tabsMain.setSelectedTabIndicatorColor(color)
                 bxColor?.songColor(color)
+                setViewColors(color)
 
             } catch (e: Exception) {
             }
