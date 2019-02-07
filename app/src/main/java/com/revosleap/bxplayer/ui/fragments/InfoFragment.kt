@@ -169,7 +169,7 @@ class InfoFragment : Fragment(), View.OnClickListener,BXColor {
         textViewInfoArtist?.text = selectedSong.artist
         val retriever = MediaMetadataRetriever()
         val inputStream: InputStream?
-        retriever.setDataSource(selectedSong?.path)
+        retriever.setDataSource(selectedSong.path)
 
         if (retriever.embeddedPicture != null) {
             inputStream = ByteArrayInputStream(retriever.embeddedPicture)

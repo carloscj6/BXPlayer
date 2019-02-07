@@ -22,4 +22,12 @@ object UniversalUtils {
             else -> "0:$secsString"
         }
     }
+
+    fun formatTrack(trackNumber: Int): Int {
+        var formatted = trackNumber
+        if (trackNumber >= 1000) {
+            formatted = trackNumber % 1000
+        }
+        return formatted
+    }
 }

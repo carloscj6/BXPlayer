@@ -12,12 +12,10 @@ import com.google.gson.reflect.TypeToken
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.models.Album
 import com.revosleap.bxplayer.models.Song
-import com.revosleap.bxplayer.models.events.ArtistInfo
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.adapters.ArtistTabAdapter
 import com.revosleap.bxplayer.utils.utils.Universal
 import kotlinx.android.synthetic.main.fragment_artist_info.*
-import org.greenrobot.eventbus.EventBus
 import java.lang.reflect.Type
 
 class FragmentArtistInfo : Fragment() {
@@ -25,8 +23,8 @@ class FragmentArtistInfo : Fragment() {
     private var artistTabAdapter: ArtistTabAdapter? = null
     private var songs = mutableListOf<Song>()
     private var albums = mutableListOf<Album>()
-    private var songString:String?=null
-            private var albumString:String?=null
+    private var songString: String? = null
+    private var albumString: String? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -51,7 +49,7 @@ class FragmentArtistInfo : Fragment() {
 
 
     private fun setTabs() {
-        artistTabAdapter = ArtistTabAdapter(playerActivity?.supportFragmentManager!!,songString,albumString)
+        artistTabAdapter = ArtistTabAdapter(playerActivity?.supportFragmentManager!!, songString, albumString)
         tabLayoutArtist.apply {
             addTab(newTab().setText("Tracks (${songs.size})"))
             addTab(newTab().setText("Albums (${albums.size})"))

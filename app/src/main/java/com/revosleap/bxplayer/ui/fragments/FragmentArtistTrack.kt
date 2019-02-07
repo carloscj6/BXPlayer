@@ -12,7 +12,6 @@ import com.google.gson.reflect.TypeToken
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.callbacks.PlayerAdapter
 import com.revosleap.bxplayer.models.Song
-import com.revosleap.bxplayer.models.events.ArtistInfo
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
@@ -23,9 +22,6 @@ import com.revosleap.simpleadapter.SimpleAdapter
 import com.revosleap.simpleadapter.SimpleCallbacks
 import kotlinx.android.synthetic.main.artist_track_item.view.*
 import kotlinx.android.synthetic.main.fragment_tracks.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.lang.reflect.Type
 
 class FragmentArtistTrack : Fragment(), SimpleCallbacks {
@@ -72,7 +68,6 @@ class FragmentArtistTrack : Fragment(), SimpleCallbacks {
     }
 
 
-
     override fun onResume() {
         super.onResume()
         getService()
@@ -97,15 +92,13 @@ class FragmentArtistTrack : Fragment(), SimpleCallbacks {
     }
 
 
-
-
     fun getMusicList() {
         val songString = arguments?.getString(Universal.SONGS_BUNDLE)
         val gson = Gson()
         val type: Type = object : TypeToken<MutableList<Song>>() {}.type
         val songs = gson.fromJson<MutableList<Song>>(songString, type)
-        if (songs!=null && songs.size>0){
-            this.songs= songs
+        if (songs != null && songs.size > 0) {
+            this.songs = songs
         }
     }
 

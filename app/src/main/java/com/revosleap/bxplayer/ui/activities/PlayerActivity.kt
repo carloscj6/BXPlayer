@@ -257,7 +257,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         currentPosition = position!!
         if (songs!=null && songs.size > 0) {
             currentSongs = songs
-            val song = currentSongs[position!!]
+            val song = currentSongs[position]
             textViewArtName?.text = song.artist
             textViewTitle.text = song.title
             val retriever = MediaMetadataRetriever()

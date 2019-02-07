@@ -39,12 +39,12 @@ object SongProvider {
         return songsList
     }
 
-    internal fun getSongs(cursor: Cursor?): MutableList<Song> {
+    private fun getSongs(cursor: Cursor?): MutableList<Song> {
         val songs = mutableListOf<Song>()
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 val song = getSongFromCursorImpl(cursor)
-                if (song.duration >= 5000) {
+                if (song.duration >= 30000) {
                     songs.add(song)
                     mAllDeviceSongs.add(song)
                 }
@@ -62,7 +62,7 @@ object SongProvider {
     private fun getSongFromCursorImpl(cursor: Cursor): Song {
         val song = Song()
         song.title = cursor.getString(TITLE)
-        song.trackNumber = cursor.getInt(TRACK)
+        song.trackNumber = UniversalUtils.formatTrack(cursor.getInt(TRACK))
         song.songYear = cursor.getInt(YEAR)
         song.duration = cursor.getLong(DURATION)
         song.path = cursor.getString(PATH)
