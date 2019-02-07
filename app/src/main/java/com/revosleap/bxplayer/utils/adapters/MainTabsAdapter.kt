@@ -8,7 +8,7 @@ import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.ui.fragments.*
 import org.jetbrains.anko.toast
 
-class TabFragmentAdapter(fm: FragmentManager, size: Int,playerActivity: PlayerActivity) : FragmentStatePagerAdapter(fm), BXColor {
+class MainTabsAdapter(fm: FragmentManager, size: Int, playerActivity: PlayerActivity) : FragmentStatePagerAdapter(fm), BXColor {
     private val faveFrag = FragmentFavorites()
     private val playlist = FragmentPlaylist()
     private val tracks = FragmentTracks()

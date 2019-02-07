@@ -21,7 +21,7 @@ import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
-import com.revosleap.bxplayer.utils.playback.PlayerAdapter
+import com.revosleap.bxplayer.callbacks.PlayerAdapter
 import com.revosleap.bxplayer.utils.utils.GetAudio
 import com.revosleap.bxplayer.utils.utils.PreferenceHelper
 import com.revosleap.bxplayer.utils.utils.Universal

@@ -15,6 +15,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import com.google.gson.Gson
+import com.revosleap.bxplayer.callbacks.PlayerAdapter
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.models.Album
 import com.revosleap.bxplayer.models.Song

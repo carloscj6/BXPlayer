@@ -30,10 +30,10 @@ import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.models.Song
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.fragments.InfoFragment
-import com.revosleap.bxplayer.utils.adapters.TabFragmentAdapter
+import com.revosleap.bxplayer.utils.adapters.MainTabsAdapter
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
-import com.revosleap.bxplayer.utils.playback.PlayerAdapter
+import com.revosleap.bxplayer.callbacks.PlayerAdapter
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
 import com.revosleap.bxplayer.utils.utils.PreferenceHelper
 import com.revosleap.bxplayer.utils.utils.Universal
@@ -51,7 +51,7 @@ import java.lang.reflect.Type
 class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     private var preferenceHelper: PreferenceHelper? = null
     private var mPlayerAdapter: PlayerAdapter? = null
-    private var mSectionsPagerAdapter: TabFragmentAdapter? = null
+    private var mSectionsPagerAdapter: MainTabsAdapter? = null
     private var mMusicService: MusicPlayerService? = null
     private var mPlaybackListener: PlaybackListener? = null
     private var mMusicNotificationManager: BXNotificationManager? = null
@@ -143,7 +143,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
             addTab(this.newTab().setText("Artists"))
             this.tabGravity = TabLayout.GRAVITY_FILL
         }
-        mSectionsPagerAdapter = TabFragmentAdapter(supportFragmentManager, 5,this@PlayerActivity)
+        mSectionsPagerAdapter = MainTabsAdapter(supportFragmentManager, 5,this@PlayerActivity)
         mViewPager.apply {
             adapter = mSectionsPagerAdapter
             currentItem = 2

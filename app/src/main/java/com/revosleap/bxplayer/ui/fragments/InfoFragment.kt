@@ -22,12 +22,12 @@ import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
-import com.revosleap.bxplayer.utils.playback.PlayerAdapter
+import com.revosleap.bxplayer.callbacks.PlayerAdapter
 import com.revosleap.bxplayer.utils.utils.AudioUtils
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
+import com.revosleap.bxplayer.utils.utils.UniversalUtils
 import kotlinx.android.synthetic.main.info.*
 import org.jetbrains.anko.startService
-import org.jetbrains.anko.toast
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 
@@ -118,7 +118,7 @@ class InfoFragment : Fragment(), View.OnClickListener,BXColor {
                     userSelectedPosition = progress
 
                 }
-                textViewProgress?.text = AudioUtils.formatDuration(progress)
+                textViewProgress?.text = UniversalUtils.formatTime(progress.toLong())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -163,8 +163,8 @@ class InfoFragment : Fragment(), View.OnClickListener,BXColor {
         val selectedSong = mPlayerAdapter?.getCurrentSong()
         mSelectedArtist = selectedSong?.artist
         val duration = selectedSong?.duration
-        seekBarInfo?.max = duration!!
-        textViewDuration?.text = AudioUtils.formatDuration(duration)
+        seekBarInfo?.max = duration?.toInt()!!
+        textViewDuration?.text = UniversalUtils.formatTime(duration)
         textViewInfoTitle?.text = selectedSong.title
         textViewInfoArtist?.text = selectedSong.artist
         val retriever = MediaMetadataRetriever()

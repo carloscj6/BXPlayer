@@ -64,7 +64,7 @@ object SongProvider {
         song.title = cursor.getString(TITLE)
         song.trackNumber = cursor.getInt(TRACK)
         song.songYear = cursor.getInt(YEAR)
-        song.duration = cursor.getInt(DURATION)
+        song.duration = cursor.getLong(DURATION)
         song.path = cursor.getString(PATH)
         song.albumName = cursor.getString(ALBUM)
         song.artistId = cursor.getInt(ARTIST_ID)

@@ -10,69 +10,72 @@ import android.view.ViewGroup
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.revosleap.bxplayer.R
+import com.revosleap.bxplayer.callbacks.PlayerAdapter
 import com.revosleap.bxplayer.models.Song
+import com.revosleap.bxplayer.models.events.ArtistInfo
 import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
-import com.revosleap.bxplayer.callbacks.PlayerAdapter
 import com.revosleap.bxplayer.utils.utils.Universal
+import com.revosleap.bxplayer.utils.utils.UniversalUtils
 import com.revosleap.simpleadapter.SimpleAdapter
 import com.revosleap.simpleadapter.SimpleCallbacks
-import kotlinx.android.synthetic.main.fragment_album_details.*
-import kotlinx.android.synthetic.main.track.view.*
+import kotlinx.android.synthetic.main.artist_track_item.view.*
+import kotlinx.android.synthetic.main.fragment_tracks.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.lang.reflect.Type
 
-class FragmentAlbumInfo : Fragment(), SimpleCallbacks {
-    private var albumString: String? = null
+class FragmentArtistTrack : Fragment(), SimpleCallbacks {
     private var playerActivity: PlayerActivity? = null
-    private var songs = mutableListOf<Song>()
     private var simpleAdapter: SimpleAdapter? = null
+    private var songs = mutableListOf<Song>()
     private var mPlayerAdapter: PlayerAdapter? = null
     private var mMusicService: MusicPlayerService? = null
     private var mMusicNotificationManager: BXNotificationManager? = null
     private var mPlaybackListener: PlaybackListener? = null
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        playerActivity = activity!! as PlayerActivity
+        playerActivity = activity as PlayerActivity
         getService()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        albumString = arguments?.getString(Universal.ALBUM_BUNDLE)
-        simpleAdapter = SimpleAdapter(R.layout.track, this)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+            : View? {
+        simpleAdapter = SimpleAdapter(R.layout.artist_track_item, this)
         getMusicList()
-        return inflater.inflate(R.layout.fragment_album_details, container, false)
+        return inflater.inflate(R.layout.fragment_tracks, container, false)
+    }
+
+    override fun bindView(view: View, item: Any, position: Int) {
+        item as Song
+        val trackNo = view.textViewTrackNumber
+        val trackTitle = view.textViewSongTitle
+        val trackDuration = view.textViewSongDuration
+        trackNo.text = item.trackNumber.toString()
+        trackTitle.text = item.title
+        trackDuration.text = UniversalUtils.formatTime(item.duration)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerViewAlbum.apply {
+        trackRecycler.apply {
             adapter = simpleAdapter
             layoutManager = LinearLayoutManager(playerActivity)
             hasFixedSize()
         }
         simpleAdapter?.addManyItems(songs.toMutableList())
-        setButtons()
-        val params = cordinator.layoutParams as ViewGroup.MarginLayoutParams
-        params.bottomMargin = playerActivity?.controls()!!.height
-        cordinator.layoutParams = params
-        textViewAlbumArtist.text = songs[0].artist
-        textViewAlbumName.text=songs[0].albumName
     }
+
+
 
     override fun onResume() {
         super.onResume()
         getService()
-    }
-
-    override fun bindView(view: View, item: Any, position: Int) {
-        item as Song
-        val titleText = view.textViewTitleTrack
-        val artistText = view.textViewArtistTrack
-        titleText.text = item.artist
-        artistText.text = item.title
     }
 
     override fun onViewClicked(view: View, item: Any, position: Int) {
@@ -82,15 +85,7 @@ class FragmentAlbumInfo : Fragment(), SimpleCallbacks {
     override fun onViewLongClicked(it: View?, item: Any, position: Int) {
 
     }
-    private fun setButtons(){
-     buttonListPlayAll.setOnClickListener {
-         onSongSelected(songs[0],songs)
-     }
-        buttonListShuffle.setOnClickListener {
-            songs.shuffle()
-            onSongSelected(songs[0],songs)
-        }
-    }
+
     private fun onSongSelected(song: Song, songs: MutableList<Song>) {
         mPlayerAdapter!!.setCurrentSong(song, songs)
         mPlayerAdapter!!.initMediaPlayer()
@@ -101,14 +96,16 @@ class FragmentAlbumInfo : Fragment(), SimpleCallbacks {
 
     }
 
-    private fun getMusicList() {
-        if (albumString != null) {
-            val gson = Gson()
-            val type: Type = object : TypeToken<MutableList<Song>>() {}.type
-            val songs = gson.fromJson<MutableList<Song>>(albumString, type)
-            if (songs != null && songs.size > 0) {
-                this.songs = songs
-            }
+
+
+
+    fun getMusicList() {
+        val songString = arguments?.getString(Universal.SONGS_BUNDLE)
+        val gson = Gson()
+        val type: Type = object : TypeToken<MutableList<Song>>() {}.type
+        val songs = gson.fromJson<MutableList<Song>>(songString, type)
+        if (songs!=null && songs.size>0){
+            this.songs= songs
         }
     }
 

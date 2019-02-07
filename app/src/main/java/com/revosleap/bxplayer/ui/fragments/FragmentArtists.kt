@@ -1,6 +1,7 @@
 package com.revosleap.bxplayer.ui.fragments
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -8,9 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import com.google.gson.Gson
 import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.models.Artist
+import com.revosleap.bxplayer.models.Song
+import com.revosleap.bxplayer.ui.activities.PlayerActivity
 import com.revosleap.bxplayer.utils.utils.ArtistProvider
 import com.revosleap.bxplayer.utils.utils.PreferenceHelper
 import com.revosleap.bxplayer.utils.utils.Universal
@@ -26,6 +30,13 @@ class FragmentArtists : Fragment(), SimpleCallbacks, AnkoLogger, BXColor {
     private var simpleAdapter: SimpleAdapter? = null
     private var artistList = mutableListOf<Artist>()
     private var viewColors = 0
+    private var playerActivity: PlayerActivity? = null
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        playerActivity = activity as PlayerActivity
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         simpleAdapter = SimpleAdapter(R.layout.artist_item, this)
@@ -68,7 +79,7 @@ class FragmentArtists : Fragment(), SimpleCallbacks, AnkoLogger, BXColor {
     }
 
     override fun onViewClicked(view: View, item: Any, position: Int) {
-
+        viewDetails(position)
     }
 
     override fun onViewLongClicked(it: View?, item: Any, position: Int) {
@@ -77,6 +88,32 @@ class FragmentArtists : Fragment(), SimpleCallbacks, AnkoLogger, BXColor {
 
     override fun songColor(color: Int) {
         viewColors = color
+
+    }
+
+    private fun viewDetails(position: Int) {
+        val fragmentArtistInfo = FragmentArtistInfo()
+        val artist = artistList[position]
+        val albums = artist.albums
+        val songs = mutableListOf<Song>()
+        albums.forEach {
+            it.songs.forEach { song ->
+                songs.add(song)
+            }
+        }
+        val gson = Gson()
+        val albumString = gson.toJson(albums)
+        val songString = gson.toJson(songs)
+        val bundle = Bundle()
+        bundle.putString(Universal.ALBUMS_BUNDLE, albumString)
+        bundle.putString(Universal.SONGS_BUNDLE, songString)
+        fragmentArtistInfo.arguments = bundle
+        playerActivity?.supportFragmentManager!!
+                .beginTransaction()
+                .replace(R.id.frame_current, fragmentArtistInfo, Universal.ALBUM_INFO_TAG)
+                .addToBackStack(null)
+                .commit()
+        playerActivity?.replaceFragment()
 
     }
 

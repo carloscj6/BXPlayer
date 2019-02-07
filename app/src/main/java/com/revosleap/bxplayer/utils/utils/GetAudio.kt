@@ -30,7 +30,7 @@ class GetAudio {
                     model.albumName = album
                     model.artist = artist
                     model.path = path
-                    model.duration = Integer.parseInt(duration)
+                    model.duration = duration.toLong()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
