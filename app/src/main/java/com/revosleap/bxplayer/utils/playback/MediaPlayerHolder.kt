@@ -16,12 +16,11 @@ import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import com.google.gson.Gson
 import com.revosleap.bxplayer.callbacks.PlayerAdapter
-import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.models.Album
 import com.revosleap.bxplayer.models.Song
+import com.revosleap.bxplayer.services.MusicPlayerService
 import com.revosleap.bxplayer.utils.utils.EqualizerUtils
 import com.revosleap.bxplayer.utils.utils.PreferenceHelper
-
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -31,44 +30,44 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     : PlayerAdapter, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
     // we have full audio focus
     private var ongoingCall: Boolean = false
-    private val mContext: Context = mMusicService!!.applicationContext
-    private val mAudioManager: AudioManager
-    private var mMediaPlayer: MediaPlayer? = null
-    private var mPlaybackInfoListener: PlaybackInfoListener? = null
-    private var mExecutor: ScheduledExecutorService? = null
-    private var mSeekBarPositionUpdateTask: Runnable? = null
-    private var mSelectedSong: Song? = null
-    private var mSongs: List<Song>? = null
-    private var mSelectedAlbum: Album? = null
-    private var sReplaySong = false
+    private val context: Context = mMusicService!!.applicationContext
+    private val audioManager: AudioManager
+    private var mediaPlayer: MediaPlayer? = null
+    private var playbackInfoListener: PlaybackInfoListener? = null
+    private var scheduledExecutorService: ScheduledExecutorService? = null
+    private var seekBarPositionUpdateTask: Runnable? = null
+    private var playingSong: Song? = null
+    private var songs: MutableList<Song>? = null
+    private var playingAlbum: Album? = null
+    private var isReplaySong = false
     @PlaybackInfoListener.State
-    private var mState: Int = 0
+    private var state: Int = 0
     private val mediaSession: MediaSessionCompat? = null
-    private var mNotificationActionsReceiver: NotificationReceiver? = null
-    private var mMusicNotificationManager: BXNotificationManager? = null
-    private var mCurrentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
-    private var mPlayOnFocusGain: Boolean = false
+    private var notificationActionsReceiver: NotificationReceiver? = null
+    private var musicNotificationManager: BXNotificationManager? = null
+    private var currentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
+    private var playOnFocusGain: Boolean = false
     private var phoneStateListener: PhoneStateListener? = null
     private var telephonyManager: TelephonyManager? = null
-    private val preferenceHelper= PreferenceHelper(mContext)
-    private val mOnAudioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
+    private val preferenceHelper = PreferenceHelper(context)
+    private val onAudioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
         when (focusChange) {
-            AudioManager.AUDIOFOCUS_GAIN -> mCurrentAudioFocusState = AUDIO_FOCUSED
+            AudioManager.AUDIOFOCUS_GAIN -> currentAudioFocusState = AUDIO_FOCUSED
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
                 // Audio focus was lost, but it's possible to duck (i.e.: play quietly)
-                mCurrentAudioFocusState = AUDIO_NO_FOCUS_CAN_DUCK
+                currentAudioFocusState = AUDIO_NO_FOCUS_CAN_DUCK
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                 // Lost audio focus, but will gain it back (shortly), so note whether
                 // playback should resume
-                mCurrentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
-                mPlayOnFocusGain = isMediaPlayer() && mState == PlaybackInfoListener.State.PLAYING || mState == PlaybackInfoListener.State.RESUMED
+                currentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
+                playOnFocusGain = isMediaPlayer() && state == PlaybackInfoListener.State.PLAYING || state == PlaybackInfoListener.State.RESUMED
             }
             AudioManager.AUDIOFOCUS_LOSS ->
                 // Lost audio focus, probably "permanently"
-                mCurrentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
+                currentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
         }
 
-        if (mMediaPlayer != null) {
+        if (mediaPlayer != null) {
             // Update the player state based on the change
             configurePlayerState()
         }
@@ -80,11 +79,11 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     }
 
     init {
-        mAudioManager = mContext.getSystemService(AUDIO_SERVICE) as AudioManager
+        audioManager = context.getSystemService(AUDIO_SERVICE) as AudioManager
     }
 
     private fun registerActionsReceiver() {
-        mNotificationActionsReceiver = NotificationReceiver()
+        notificationActionsReceiver = NotificationReceiver()
         val intentFilter = IntentFilter()
 
         intentFilter.addAction(BXNotificationManager.PREV_ACTION)
@@ -95,13 +94,13 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
         intentFilter.addAction(Intent.ACTION_HEADSET_PLUG)
         intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
 
-        mMusicService!!.registerReceiver(mNotificationActionsReceiver, intentFilter)
+        mMusicService!!.registerReceiver(notificationActionsReceiver, intentFilter)
     }
 
     private fun unregisterActionsReceiver() {
-        if (mMusicService != null && mNotificationActionsReceiver != null) {
+        if (mMusicService != null && notificationActionsReceiver != null) {
             try {
-                mMusicService.unregisterReceiver(mNotificationActionsReceiver)
+                mMusicService.unregisterReceiver(notificationActionsReceiver)
             } catch (e: IllegalArgumentException) {
                 e.printStackTrace()
             }
@@ -120,42 +119,53 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
 
     override fun getCurrentSong(): Song? {
-        val index = mSongs?.indexOf(mSelectedSong)
-        preferenceHelper.currentIndex =index!!
-        return mSelectedSong
+        val index = songs?.indexOf(playingSong)
+        preferenceHelper.currentIndex = index!!
+        return playingSong
+    }
+
+    override fun getCurrentSongs(): MutableList<Song>? {
+        return songs
     }
 
     override fun getSelectedAlbum(): Album? {
-        return mSelectedAlbum
+        return playingAlbum
     }
 
     override fun setSelectedAlbum(album: Album) {
-        mSelectedAlbum = album
+        playingAlbum = album
     }
 
     override fun setCurrentSong(song: Song, songs: MutableList<Song>) {
-        mSelectedSong = song
-        mSongs = songs
-        if (songs.size>0){
-         saveSongs(songs)
+        playingSong = song
+        this.songs = songs
+        if (songs.size > 0) {
+            saveSongs(songs)
         }
     }
-    private fun saveSongs(songs: MutableList<Song>){
+
+    override fun shufflePlayList() {
+        songs?.shuffle()
+        saveSongs(songs!!)
+    }
+
+    private fun saveSongs(songs: MutableList<Song>) {
         val gson = Gson()
         val gsonString = gson.toJson(songs)
         preferenceHelper.playingList = gsonString
     }
+
     override fun onCompletion(mediaPlayer: MediaPlayer) {
-        if (mPlaybackInfoListener != null) {
-            mPlaybackInfoListener!!.onStateChanged(PlaybackInfoListener.State.COMPLETED)
-            mPlaybackInfoListener!!.onPlaybackCompleted()
+        if (playbackInfoListener != null) {
+            playbackInfoListener!!.onStateChanged(PlaybackInfoListener.State.COMPLETED)
+            playbackInfoListener!!.onPlaybackCompleted()
         }
 
-        if (sReplaySong) {
+        if (isReplaySong) {
             if (isMediaPlayer()) {
                 resetSong()
             }
-            sReplaySong = false
+            isReplaySong = false
         } else {
             skip(true)
         }
@@ -171,71 +181,71 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
     private fun tryToGetAudioFocus() {
 
-        val result = mAudioManager.requestAudioFocus(
-                mOnAudioFocusChangeListener,
+        val result = audioManager.requestAudioFocus(
+                onAudioFocusChangeListener,
                 AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN)
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mCurrentAudioFocusState = AUDIO_FOCUSED
+            currentAudioFocusState = AUDIO_FOCUSED
         } else {
-            mCurrentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
+            currentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
         }
     }
 
     private fun giveUpAudioFocus() {
-        if (mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mCurrentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
+        if (audioManager.abandonAudioFocus(onAudioFocusChangeListener) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            currentAudioFocusState = AUDIO_NO_FOCUS_NO_DUCK
         }
     }
 
     override fun setPlaybackInfoListener(playbackInfoListener: PlaybackInfoListener) {
-        mPlaybackInfoListener = playbackInfoListener
+        this.playbackInfoListener = playbackInfoListener
     }
 
     private fun setStatus(@PlaybackInfoListener.State state: Int) {
 
-        mState = state
-        if (mPlaybackInfoListener != null) {
-            mPlaybackInfoListener!!.onStateChanged(state)
+        this.state = state
+        if (playbackInfoListener != null) {
+            playbackInfoListener!!.onStateChanged(state)
         }
     }
 
     private fun resumeMediaPlayer() {
         if (!isPlaying()) {
-            mMediaPlayer!!.start()
+            mediaPlayer!!.start()
             setStatus(PlaybackInfoListener.State.RESUMED)
             mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
-                    mMusicNotificationManager!!.createNotification())
+                    musicNotificationManager!!.createNotification())
         }
     }
 
     fun pauseMediaPlayer() {
         setStatus(PlaybackInfoListener.State.PAUSED)
-        mMediaPlayer!!.pause()
+        mediaPlayer!!.pause()
         mMusicService!!.stopForeground(false)
-        mMusicNotificationManager!!.notificationManager.notify(BXNotificationManager.NOTIFICATION_ID,
-                mMusicNotificationManager!!.createNotification())
+        musicNotificationManager!!.notificationManager.notify(BXNotificationManager.NOTIFICATION_ID,
+                musicNotificationManager!!.createNotification())
     }
 
     private fun resetSong() {
-        mMediaPlayer!!.seekTo(0)
-        mMediaPlayer!!.start()
+        mediaPlayer!!.seekTo(0)
+        mediaPlayer!!.start()
         setStatus(PlaybackInfoListener.State.PLAYING)
     }
 
     /**
-     * Syncs the mMediaPlayer position with mPlaybackProgressCallback via recurring task.
+     * Syncs the mediaPlayer position with mPlaybackProgressCallback via recurring task.
      */
     private fun startUpdatingCallbackWithPosition() {
-        if (mExecutor == null) {
-            mExecutor = Executors.newSingleThreadScheduledExecutor()
+        if (scheduledExecutorService == null) {
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
         }
-        if (mSeekBarPositionUpdateTask == null) {
-            mSeekBarPositionUpdateTask = Runnable { updateProgressCallbackTask() }
+        if (seekBarPositionUpdateTask == null) {
+            seekBarPositionUpdateTask = Runnable { updateProgressCallbackTask() }
         }
 
-        mExecutor!!.scheduleAtFixedRate(
-                mSeekBarPositionUpdateTask,
+        scheduledExecutorService!!.scheduleAtFixedRate(
+                seekBarPositionUpdateTask,
                 0,
                 1000,
                 TimeUnit.MILLISECONDS
@@ -244,25 +254,25 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
     // Reports media playback position to mPlaybackProgressCallback.
     private fun stopUpdatingCallbackWithPosition() {
-        if (mExecutor != null) {
-            mExecutor!!.shutdownNow()
-            mExecutor = null
-            mSeekBarPositionUpdateTask = null
+        if (scheduledExecutorService != null) {
+            scheduledExecutorService!!.shutdownNow()
+            scheduledExecutorService = null
+            seekBarPositionUpdateTask = null
         }
     }
 
     private fun updateProgressCallbackTask() {
-        if (isMediaPlayer() && mMediaPlayer!!.isPlaying) {
-            val currentPosition = mMediaPlayer!!.currentPosition
-            if (mPlaybackInfoListener != null) {
-                mPlaybackInfoListener!!.onPositionChanged(currentPosition)
+        if (isMediaPlayer() && mediaPlayer!!.isPlaying) {
+            val currentPosition = mediaPlayer!!.currentPosition
+            if (playbackInfoListener != null) {
+                playbackInfoListener!!.onPositionChanged(currentPosition)
             }
         }
     }
 
     override fun instantReset() {
         if (isMediaPlayer()) {
-            if (mMediaPlayer!!.currentPosition < 5000) {
+            if (mediaPlayer!!.currentPosition < 5000) {
                 skip(false)
             } else {
                 resetSong()
@@ -270,36 +280,30 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
         }
     }
 
-    /**
-     * Once the [MediaPlayer] is released, it can't be used again, and another one has to be
-     * created. In the onStop() method of the [com.revosleap.bxplayer.PlayerActivity] the [MediaPlayer] is
-     * released. Then in the onStart() of the [com.revosleap.bxplayer.PlayerActivity] a new [MediaPlayer]
-     * object has to be created. That's why this method is private, and called by load(int) and
-     * not the constructor.
-     */
+
     override fun initMediaPlayer() {
 
         try {
-            if (mMediaPlayer != null) {
-                mMediaPlayer!!.reset()
+            if (mediaPlayer != null) {
+                mediaPlayer!!.reset()
             } else {
-                mMediaPlayer = MediaPlayer()
-                EqualizerUtils.openAudioEffectSession(mContext, mMediaPlayer!!.audioSessionId)
+                mediaPlayer = MediaPlayer()
+                EqualizerUtils.openAudioEffectSession(context, mediaPlayer!!.audioSessionId)
 
-                mMediaPlayer!!.setOnPreparedListener(this)
-                mMediaPlayer!!.setOnCompletionListener(this)
-                mMediaPlayer!!.setWakeMode(mContext, PowerManager.PARTIAL_WAKE_LOCK)
-                mMediaPlayer!!.setAudioAttributes(AudioAttributes.Builder()
+                mediaPlayer!!.setOnPreparedListener(this)
+                mediaPlayer!!.setOnCompletionListener(this)
+                mediaPlayer!!.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK)
+                mediaPlayer!!.setAudioAttributes(AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                         .build())
-                mMusicNotificationManager = mMusicService!!.musicNotificationManager
+                musicNotificationManager = mMusicService!!.musicNotificationManager
                 callStateListener()
 
             }
             tryToGetAudioFocus()
-            mMediaPlayer!!.setDataSource(mSelectedSong!!.path)
-            mMediaPlayer!!.prepare()
+            mediaPlayer!!.setDataSource(playingSong!!.path)
+            mediaPlayer!!.prepare()
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -309,7 +313,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
 
     override fun getMediaPlayer(): MediaPlayer? {
-        return mMediaPlayer
+        return mediaPlayer
     }
 
     override fun onPrepared(mediaPlayer: MediaPlayer) {
@@ -319,21 +323,21 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     }
 
     override fun openEqualizer(activity: Activity) {
-        EqualizerUtils.openEqualizer(activity, mMediaPlayer!!)
+        EqualizerUtils.openEqualizer(activity, mediaPlayer!!)
     }
 
     override fun release() {
         if (isMediaPlayer()) {
-            EqualizerUtils.closeAudioEffectSession(mContext, mMediaPlayer!!.audioSessionId)
-            mMediaPlayer!!.release()
-            mMediaPlayer = null
+            EqualizerUtils.closeAudioEffectSession(context, mediaPlayer!!.audioSessionId)
+            mediaPlayer!!.release()
+            mediaPlayer = null
             giveUpAudioFocus()
             unregisterActionsReceiver()
         }
     }
 
     override fun isPlaying(): Boolean {
-        return isMediaPlayer() && mMediaPlayer!!.isPlaying
+        return isMediaPlayer() && mediaPlayer!!.isPlaying
     }
 
     override fun resumeOrPause() {
@@ -347,19 +351,19 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
     @PlaybackInfoListener.State
     override fun getState(): Int {
-        return mState
+        return state
     }
 
     override fun isMediaPlayer(): Boolean {
-        return mMediaPlayer != null
+        return mediaPlayer != null
     }
 
     override fun reset() {
-        sReplaySong = !sReplaySong
+        isReplaySong = !isReplaySong
     }
 
     override fun isReset(): Boolean {
-        return sReplaySong
+        return isReplaySong
     }
 
     override fun skip(isNext: Boolean) {
@@ -367,15 +371,15 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     }
 
     private fun getSkipSong(isNext: Boolean) {
-        val currentIndex = mSongs!!.indexOf(mSelectedSong)
+        val currentIndex = songs!!.indexOf(playingSong)
 
         val index: Int
 
         try {
             index = if (isNext) currentIndex + 1 else currentIndex - 1
-            mSelectedSong = mSongs!![index]
+            playingSong = songs!![index]
         } catch (e: IndexOutOfBoundsException) {
-            mSelectedSong = if (currentIndex != 0) mSongs!![0] else mSongs!![mSongs!!.size - 1]
+            playingSong = if (currentIndex != 0) songs!![0] else songs!![songs!!.size - 1]
             e.printStackTrace()
         }
 
@@ -384,12 +388,12 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
     override fun seekTo(position: Int) {
         if (isMediaPlayer()) {
-            mMediaPlayer!!.seekTo(position)
+            mediaPlayer!!.seekTo(position)
         }
     }
 
     override fun getPlayerPosition(): Int {
-        return mMediaPlayer!!.currentPosition
+        return mediaPlayer!!.currentPosition
     }
 
     /**
@@ -401,22 +405,22 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
      */
     private fun configurePlayerState() {
 
-        if (mCurrentAudioFocusState == AUDIO_NO_FOCUS_NO_DUCK) {
+        if (currentAudioFocusState == AUDIO_NO_FOCUS_NO_DUCK) {
             // We don't have audio focus and can't duck, so we have to pause
             pauseMediaPlayer()
         } else {
 
-            if (mCurrentAudioFocusState == AUDIO_NO_FOCUS_CAN_DUCK) {
+            if (currentAudioFocusState == AUDIO_NO_FOCUS_CAN_DUCK) {
                 // We're permitted to play, but only if we 'duck', ie: play softly
-                mMediaPlayer!!.setVolume(VOLUME_DUCK, VOLUME_DUCK)
+                mediaPlayer!!.setVolume(VOLUME_DUCK, VOLUME_DUCK)
             } else {
-                mMediaPlayer!!.setVolume(VOLUME_NORMAL, VOLUME_NORMAL)
+                mediaPlayer!!.setVolume(VOLUME_NORMAL, VOLUME_NORMAL)
             }
 
             // If we were playing when we lost focus, we need to resume playing.
-            if (mPlayOnFocusGain) {
+            if (playOnFocusGain) {
                 resumeMediaPlayer()
-                mPlayOnFocusGain = false
+                playOnFocusGain = false
             }
         }
     }
@@ -433,13 +437,13 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
                     BXNotificationManager.PLAY_PAUSE_ACTION -> resumeOrPause()
                     BXNotificationManager.NEXT_ACTION -> skip(true)
 
-                    BluetoothDevice.ACTION_ACL_DISCONNECTED -> if (mSelectedSong != null) {
+                    BluetoothDevice.ACTION_ACL_DISCONNECTED -> if (playingSong != null) {
                         pauseMediaPlayer()
                     }
-                    BluetoothDevice.ACTION_ACL_CONNECTED -> if (mSelectedSong != null && !isPlaying()) {
+                    BluetoothDevice.ACTION_ACL_CONNECTED -> if (playingSong != null && !isPlaying()) {
                         resumeMediaPlayer()
                     }
-                    Intent.ACTION_HEADSET_PLUG -> if (mSelectedSong != null) {
+                    Intent.ACTION_HEADSET_PLUG -> if (playingSong != null) {
                         when (intent.getIntExtra("state", -1)) {
                             //0 means disconnected
                             0 -> pauseMediaPlayer()
@@ -460,7 +464,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
 
     private fun callStateListener() {
         // Get the telephony manager
-        telephonyManager = mContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         //Starting listening for PhoneState changes
         phoneStateListener = object : PhoneStateListener() {
             override fun onCallStateChanged(state: Int, incomingNumber: String) {
@@ -473,7 +477,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
                     }
                     TelephonyManager.CALL_STATE_IDLE ->
                         // Phone idle. Start playing.
-                        if (mMediaPlayer != null) {
+                        if (mediaPlayer != null) {
                             if (ongoingCall) {
                                 ongoingCall = false
                                 resumeMediaPlayer()

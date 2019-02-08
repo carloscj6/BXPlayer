@@ -18,11 +18,15 @@ interface PlayerAdapter {
 
     fun getCurrentSong(): Song?
 
+    fun getCurrentSongs():MutableList<Song>?
+
     fun getPlayerPosition(): Int
 
     fun getSelectedAlbum(): Album?
 
     fun initMediaPlayer()
+
+    fun shufflePlayList()
 
     fun release()
 

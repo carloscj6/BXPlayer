@@ -29,7 +29,7 @@ import com.revosleap.bxplayer.R
 import com.revosleap.bxplayer.callbacks.BXColor
 import com.revosleap.bxplayer.models.Song
 import com.revosleap.bxplayer.services.MusicPlayerService
-import com.revosleap.bxplayer.ui.fragments.InfoFragment
+import com.revosleap.bxplayer.ui.fragments.FragmentInfo
 import com.revosleap.bxplayer.utils.adapters.MainTabsAdapter
 import com.revosleap.bxplayer.utils.playback.BXNotificationManager
 import com.revosleap.bxplayer.utils.playback.PlaybackInfoListener
@@ -60,6 +60,8 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     private var isPlayingNew = false
     private var isServiceBound = false
     private var bxColor:BXColor? = null
+    private var isPlayListOpen= false
+    private val fragmentInfo= FragmentInfo()
     var color: Int = 0
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -102,7 +104,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         if (mPlaybackListener == null) {
             mPlaybackListener = PlaybackListener()
             mPlayerAdapter?.setPlaybackInfoListener(mPlaybackListener!!)
-            //     mPlaybackListener?.onStateChanged(PlaybackInfoListener.State.PLAYING)
+
         }
 
     }
@@ -115,14 +117,6 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     override fun onResume() {
         super.onResume()
         doBindService()
-//        mPlayerAdapter?.getMediaPlayer()?.start()
-//        mMusicService?.startForeground(BXNotificationManager.NOTIFICATION_ID,
-//                mMusicNotificationManager?.createNotification())
-        if (mMusicService != null) {
-            toast("found")
-            //     mPlaybackListener?.onStateChanged(PlaybackInfoListener.State.PLAYING)
-        }
-
     }
     fun setColorCallback(bxColor: BXColor){
         this@PlayerActivity.bxColor= bxColor
@@ -162,15 +156,14 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     }
 
     private fun getInfoFragment() {
-        val fragment = InfoFragment()
-        val fragmentTag = fragment.tag
+        val fragmentTag = fragmentInfo.tag
         val popped = supportFragmentManager.popBackStackImmediate(fragmentTag, 0)
         if (!popped && supportFragmentManager.findFragmentByTag(fragmentTag) == null) {
             supportFragmentManager
                     .beginTransaction()
                     .addToBackStack(fragmentTag)
-                    .add(R.id.frame_current, fragment, fragmentTag)
-                    .show(fragment)
+                    .add(R.id.frame_current, fragmentInfo, fragmentTag)
+                    .show(fragmentInfo)
                     .commit()
 
 
@@ -202,7 +195,11 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
 
     override fun onBackPressed() {
         val fragments = supportFragmentManager.backStackEntryCount
-        if (supportFragmentManager.findFragmentByTag(Universal.ALBUM_INFO_TAG)!=null){
+
+        if (isPlayListOpen){
+         fragmentInfo.togglePlayList()
+        }
+        else if (supportFragmentManager.findFragmentByTag(Universal.ALBUM_INFO_TAG)!=null){
             supportFragmentManager.popBackStack()
             frame_music.visibility = View.VISIBLE
 
@@ -212,13 +209,14 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
             frame_music.visibility = View.VISIBLE
             constControls!!.visibility = View.VISIBLE
         } else {
-            frame_music.visibility = View.VISIBLE
-            constControls!!.visibility = View.VISIBLE
+
             super.onBackPressed()
 
         }
     }
-
+    fun togglePlaylist(isOpen:Boolean){
+        isPlayListOpen= isOpen
+    }
     private fun checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE )

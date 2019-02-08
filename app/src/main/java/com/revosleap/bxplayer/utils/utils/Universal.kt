@@ -10,5 +10,5 @@ object Universal {
     const val ALBUM_BUNDLE= "album.bundle"
     const val SONGS_BUNDLE="songs.bundle"
     const val ALBUMS_BUNDLE="albums.bundle"
-    const val ALBUM_INFO_TAG ="album.info"
+    const val ALBUM_INFO_TAG ="album.fragment_info"
 }

@@ -1,9 +1,5 @@
 -keep public class * implements com.bumptech.glide.module.GlideModule
--keepattributes *Annotation*
--keepclassmembers class * {
-    @org.greenrobot.eventbus.Subscribe <methods>;
-}
--keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
 
 # Add project specific ProGuard rules here.
 # You can control the set of applied configuration files using the
