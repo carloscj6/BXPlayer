@@ -1,5 +1,9 @@
 # BXPlayer
 Music player Slowly coming to life.
+## Screenshots
+<img src="/home_alpha_01.png" width="300px"> <img src="/alpha_02.png" width="300px"> <img src="/alpha_03.png" width="300px">
+<img src="/alpha_04.png" width="300px"> <img src="/alpha_05.png" width="300px">
+
 <h2 id="license"> License</h2> 
  GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
