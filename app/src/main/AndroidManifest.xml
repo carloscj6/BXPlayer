@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.revosleap.bxplayer">
+    package="com.revosleap.proxima">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -21,14 +21,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <service
-            android:name=".services.MusicPlayerService"
+            android:name="com.revosleap.proxima.services.MusicPlayerService"
             android:enabled="true"
             android:exported="true"
             android:permission="com.revosleap.bxplayer.MUSIC_PLAYER_SERVICE" />
 
 
         <activity
-            android:name=".ui.activities.PlayerActivity"
+            android:name="com.revosleap.proxima.ui.activities.PlayerActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -41,7 +41,7 @@
 
 
         <meta-data
-            android:name="com.revosleap.bxplayer.utils.utils.GlideLoader"
+            android:name="com.revosleap.proxima.utils.utils.GlideLoader"
             android:value="GlideModule" />
         <meta-data
             android:name="preloaded_fonts"

@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.revosleap.bxplayer"
+        applicationId "com.revosleap.proxima"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 2
