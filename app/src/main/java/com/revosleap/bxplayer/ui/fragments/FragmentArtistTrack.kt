@@ -65,6 +65,9 @@ class FragmentArtistTrack : Fragment(), SimpleCallbacks {
             hasFixedSize()
         }
         simpleAdapter?.addManyItems(songs.toMutableList())
+        buttonListShuffle.visibility= View.GONE
+        buttonListSort.visibility= View.GONE
+        buttonListPlayAll.visibility= View.GONE
     }
 
 

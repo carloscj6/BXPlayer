@@ -10,6 +10,7 @@ class PreferenceHelper(context: Context) {
         private const val ARTIST_SORTING = "player.artistSorting"
         private const val CURRENT_PLAYING = "player.currentPlaying"
         private const val CURRENT_PLAYING_INDEX = "player.currentPlayingIndex"
+        private const val CURRENT_PLAYING_POSITION="current.song.position"
     }
 
     private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -28,5 +29,8 @@ class PreferenceHelper(context: Context) {
 
     var currentIndex = preferences.getInt(CURRENT_PLAYING_INDEX, 0)
         set(value) = preferences.edit().putInt(CURRENT_PLAYING_INDEX, value).apply()
+
+    var currentPosition = preferences.getInt(CURRENT_PLAYING_INDEX, 0)
+        set(value) = preferences.edit().putInt(CURRENT_PLAYING_POSITION, value).apply()
 
 }

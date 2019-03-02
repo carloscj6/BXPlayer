@@ -86,21 +86,23 @@ class FragmentInfo : Fragment(), View.OnClickListener, BXColor, SimpleCallbacks 
     }
 
     override fun onViewClicked(view: View, item: Any, position: Int) {
-        onSongSelected(currentPlayList[position],currentPlayList)
+        onSongSelected(currentPlayList[position], currentPlayList)
     }
 
     override fun onViewLongClicked(it: View?, item: Any, position: Int) {
 
     }
-    private fun onSongSelected(song: Song, songs:MutableList<Song>) {
-        mPlayerAdapter!!.setCurrentSong(song, songs)
-        mPlayerAdapter!!.initMediaPlayer()
-        mPlayerAdapter!!.getMediaPlayer()?.start()
-        mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
-                mMusicNotificationManager!!.createNotification())
+
+    private fun onSongSelected(song: Song, songs: MutableList<Song>) {
+        mPlayerAdapter?.setCurrentSong(song, songs)
+        mPlayerAdapter?.initMediaPlayer()
+        mPlayerAdapter?.getMediaPlayer()?.start()
+        mMusicService?.startForeground(BXNotificationManager.NOTIFICATION_ID,
+                mMusicNotificationManager?.createNotification())
 
 
     }
+
     override fun songColor(color: Int) {
         buttonInfoPlaylist?.setColorFilter(color)
         buttonInfoPlay?.setColorFilter(color)
@@ -249,7 +251,7 @@ class FragmentInfo : Fragment(), View.OnClickListener, BXColor, SimpleCallbacks 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.buttonInfoPlaylist -> {
-               showThisPlayList()
+                showThisPlayList()
             }
             R.id.buttonInfoFave -> {
             }
@@ -268,7 +270,7 @@ class FragmentInfo : Fragment(), View.OnClickListener, BXColor, SimpleCallbacks 
 
     private fun showThisPlayList() {
         val song = mPlayerAdapter?.getCurrentSong()!!
-        val position= currentPlayList.indexOf(song)
+        val position = currentPlayList.indexOf(song)
         if (!isPlayListShown) {
             recyclerViewCurrent?.visibility = View.VISIBLE
             constraintLayout2?.visibility = View.GONE

@@ -285,11 +285,13 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
     }
 
     private fun onSongSelected(song: Song, songs: MutableList<Song>) {
+
         mPlayerAdapter!!.setCurrentSong(song, songs)
         mPlayerAdapter!!.initMediaPlayer()
         mPlayerAdapter!!.getMediaPlayer()?.start()
         mMusicService!!.startForeground(BXNotificationManager.NOTIFICATION_ID,
                 mMusicNotificationManager!!.createNotification())
+
 
 
     }
@@ -438,7 +440,6 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener, AnkoLogger {
         }
 
         override fun onStateChanged(@State state: Int) {
-            toast("works here")
             if (mPlayerAdapter?.getState() != State.RESUMED && mPlayerAdapter?.getState() != State.PAUSED) {
                 updatePlayingInfo(false, startPlay = true)
             }

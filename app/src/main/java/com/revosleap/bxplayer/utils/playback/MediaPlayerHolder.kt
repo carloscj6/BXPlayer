@@ -121,6 +121,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     override fun getCurrentSong(): Song? {
         val index = songs?.indexOf(playingSong)
         preferenceHelper.currentIndex = index!!
+        preferenceHelper.currentPosition = mediaPlayer?.currentPosition!!
         return playingSong
     }
 
@@ -393,6 +394,7 @@ class MediaPlayerHolder internal constructor(private val mMusicService: MusicPla
     }
 
     override fun getPlayerPosition(): Int {
+
         return mediaPlayer!!.currentPosition
     }
 

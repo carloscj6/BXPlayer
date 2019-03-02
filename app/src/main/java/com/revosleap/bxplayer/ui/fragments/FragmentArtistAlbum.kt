@@ -54,6 +54,7 @@ class FragmentArtistAlbum : Fragment(), SimpleCallbacks {
             hasFixedSize()
         }
         simpleAdapter?.addManyItems(albums.toMutableList())
+        buttonListSortAlbums.visibility= View.GONE
     }
 
     private fun getAlbums() {
