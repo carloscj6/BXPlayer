@@ -4,10 +4,21 @@ Music player Slowly coming to life.
 <img src="/home_alpha_01.png" width="200px"> <img src="/alpha_02.png" width="200px"> <img src="/alpha_03.png" width="200px">
 <img src="/alpha_04.png" width="200px"> <img src="/alpha_05.png" width="200px">
 
-<h2 id="license"> License</h2> 
+License
+-------
+    Copyright (C) 2019  Carlos Anyona
 
-<h3> GNU Affero General Public License v3.0</h3>
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-` Permissions of this strongest copyleft license are conditioned on making available complete source code of licensed works and   modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must     be preserved. Contributors provide an express grant of patent rights. When a modified version is used to provide a service     over a network, the complete source code of the modified version must be made available.`
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
- Check license [here](/blob/master/LICENSE)
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+ Check full license [here](/LICENSE)
